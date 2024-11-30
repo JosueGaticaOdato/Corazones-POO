@@ -69,7 +69,9 @@ public class Corazones implements Observable {
 	// 						COMPORTAMIENTO
 	// ************************************************************
 	
-	
+	public void iniciarJuego() {
+		System.out.println("Iniciar Juego!");
+	}
 	
 	// *************************************************************
 	// 						ALTA Y MODIFICACION
