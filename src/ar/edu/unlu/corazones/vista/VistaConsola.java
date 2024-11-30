@@ -30,26 +30,8 @@ public class VistaConsola implements IVista {
 	}
 	
 	// *************************************************************
-	//                  COMPORTAMIENTO MENU CONSOLA
+	//                COMPORTAMIENTO PROPIO DE LA CONSOLA
 	// *************************************************************
-	
-	//Menu principal del program
-	private void mostrarMenu() {
-		System.out.println("****************************");
-		System.out.println("*    	 CORAZONES         *");
-		System.out.println("****************************");
-		System.out.println();
-		System.out.println("Seleccione una opcion:");
-		System.out.println("----------------------");
-		System.out.println("1 - Crear jugador");
-		System.out.println("2 - Modificar jugador");
-		System.out.println("3 - Ver lista de jugadores");
-		System.out.println("4 - Comenzar juego");
-		System.out.println("----------------------");
-		System.out.println();
-		System.out.println("0 - Salir");
-		System.out.print("Opcion: ");
-	}
 	
 	//Metodo para continuar y no sacar la pantalla de una
 	private void continuar() {
@@ -69,17 +51,114 @@ public class VistaConsola implements IVista {
 
 	
 	// *************************************************************
-	//                       COMPORTAMIENTO
+	//                         PRE-JUEGO
 	// *************************************************************
-	
-	// ********************* PRE-JUEGO *****************************
 	
 	@Override
 	public void iniciar() {
-		// TODO Auto-generated method stub
-		System.out.println("Iniciar desde consola");
+		boolean salir = false;
+		while(!salir) {
+			limpiarPantalla();
+			mostrarMenu();
+			int opcion = this.entrada.nextInt();
+			limpiarPantalla();
+			switch (opcion) {
+				case 1: //Crear jugador
+					nuevoJugador();
+					break;
+				case 2: //Modificar jugador por posicion
+					modificarJugador();
+					break;
+				case 3: //Mostrar lista de jugadores 
+					listaJugadores();
+					break;
+				case 4: //Comenzar juego
+					jugar();
+					break;
+				case 0: //Salir del juego
+					salir = true;
+					System.out.println("Gracias por jugar!!");
+					break;
+				default: //Opcion por default
+					System.out.println("Opcion no valida.");
+			}
+			continuar();
+		}
 	}
 	
+	//Menu principal del program
+	private void mostrarMenu() {
+		System.out.println("****************************");
+		System.out.println("*    	 CORAZONES         *");
+		System.out.println("****************************");
+		System.out.println();
+		System.out.println("Seleccione una opcion:");
+		System.out.println("----------------------");
+		System.out.println("1 - Crear jugador");
+		System.out.println("2 - Modificar jugador");
+		System.out.println("3 - Ver lista de jugadores");
+		System.out.println("4 - Comenzar juego");
+		System.out.println("----------------------");
+		System.out.println();
+		System.out.println("0 - Salir");
+		System.out.print("Opcion: ");
+	}
+	
+	// ************************* ALTA ******************************
+	
+	private void nuevoJugador() {
+		if (!this.controlador.isCantidadJugadoresValida()) {
+			System.out.println("\n" + "---------- NUEVO JUGADOR! -------------" + "\n");
+			System.out.print("Ingrese el nombre del nuevo jugador: ");
+			String nombre = entrada.next();
+			this.controlador.agregarJugador(nombre);
+			System.out.println("Jugador agregado!");
+		} else {
+			System.out.println("\n" + "Ya estan todos los jugadores inscriptos" + "\n");
+		}
+	}
+
+	// ********************* MODIFICACION **************************
+	
+	private void modificarJugador() {
+		listaJugadores();
+		System.out.print("Por favor, ingrese el numero de jugador que quiere modificar: ");
+		int pos = entrada.nextInt();
+		System.out.print("Por favor, ingrese el numero del nuevo jugador: ");
+		String nombre = entrada.next();
+		boolean creado = controlador.modificarJugador(nombre, pos);
+		if (creado) {
+			System.out.println("Jugador modificado con exito!");
+		} else {
+			System.out.println("No se pudo modificar el jugador.");
+		}
+	}
+	
+	// ******************* LISTA DE JUGADORES  *********************
+	
+	private void listaJugadores() {
+		System.out.println("\n" + "Lista de jugadores:");
+		String[] jugadores = controlador.listaJugadores();
+		String s = "\n";
+		for (int i = 0; i < controlador.cantidadJugadores(); i++) {
+			s += (i+1) + ") Jugador: "; 
+			if (jugadores[i] == null) {
+				s += "(Sin agregar)";
+			} else {
+				s += jugadores[i];
+			}
+			s += "\n";
+		}
+		System.out.println(s);
+	}
+	
+	// *************************************************************
+	//                         JUGAR
+	// *************************************************************
+	
+	public void jugar() {
+		System.out.println("Jugar desde consola");
+	}
 	
 	// *************************************************************
 	//                		 OBSERVER

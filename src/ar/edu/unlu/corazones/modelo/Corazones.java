@@ -141,11 +141,11 @@ public class Corazones implements Observable {
 	}
 	
 	public int getCantidadJugadores() {
-		return Corazones.cantJugadores;
+		return cantJugadores;
 	}
 	
 	public int getCantCartasIntercambio() {
-		return Corazones.cantCartasIntercambio;
+		return cantCartasIntercambio;
 	}
 	
 	// *************************************************************
@@ -169,7 +169,13 @@ public class Corazones implements Observable {
 	}*/
 	
 	public boolean isCantidadJugadoresValida() {
-		return getCantidadJugadores() == getJugadores().length;
+	    int jugadoresRegistrados = 0;
+	    for (Object jugador : getJugadores()) {
+	        if (jugador != null) {
+	            jugadoresRegistrados++;
+	        }
+	    }
+	    return jugadoresRegistrados == getCantidadJugadores();
 	}
 	
 	
