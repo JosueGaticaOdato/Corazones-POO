@@ -3,23 +3,21 @@ package ar.edu.unlu.corazones.vista;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.util.Arrays;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 import ar.edu.unlu.corazones.controlador.Controlador;
 import ar.edu.unlu.corazones.vista.gui.FondoTapete;
 
-public class VistaGrafica extends JFrame implements IVista {
+public class VistaGrafica extends JFrame implements IVista{
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -32,6 +30,10 @@ public class VistaGrafica extends JFrame implements IVista {
 	private Controlador controlador;
 	
 	private CardLayout cardLayout;
+	
+	private JPanel panelMenu;
+
+	//private JPanel contentPane;
 	
 	// *************************************************************
 	//                        CONSTRUCTOR
@@ -50,9 +52,9 @@ public class VistaGrafica extends JFrame implements IVista {
         panelPrincipal = new FondoTapete("/ar/edu/unlu/corazones/img/tapete.jpg");
         panelPrincipal.setLayout(cardLayout);
 		setContentPane(panelPrincipal);		
-		
-	}
 	
+	}
+
     // *************************************************************
     //                    CONTROL DE VISTAS
     // *************************************************************
@@ -64,6 +66,15 @@ public class VistaGrafica extends JFrame implements IVista {
     private void crearVistas() {
     	crearMenu();
         //crearVistaJuego(); // Crea la vista del juego
+    }
+    
+ // Método para crear botones con tamaño fijo
+    private JButton crearBoton(String texto, int ancho, int alto) {
+        JButton boton = new JButton(texto);
+        boton.setMaximumSize(new Dimension(ancho, alto));
+        boton.setPreferredSize(new Dimension(ancho, alto));
+        boton.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrar el botón en el panel
+        return boton;
     }
     
 	// *************************************************************
@@ -78,25 +89,31 @@ public class VistaGrafica extends JFrame implements IVista {
 	}
 	
 	private void crearMenu() {
-		JPanel panelMenu = new JPanel();
+		panelMenu = new JPanel();
 		panelMenu.setLayout(new BorderLayout());
 		panelMenu.setOpaque(false);
-        //panelMenu.setLayout(new GridLayout(5, 1));
 		
-		//Agrego el logo
-		JLabel lblImagen = new JLabel(new ImageIcon("/ar/edu/unlu/corazones/img/logo.png"));
-	    lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
-	    panelMenu.add(lblImagen, BorderLayout.NORTH);
+		/* Falta agregar logo
+		 * JLabel lblImagen = new JLabel(new
+		 * ImageIcon("/ar/edu/unlu/corazones/img/logo.png"));
+		 * lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
+		 * panelMenu.add(lblImagen, BorderLayout.NORTH);
+		 */
 	    
 	    //Panel de botones
 	    JPanel panelBotones = new JPanel();
 	    panelBotones.setLayout(new BoxLayout(panelBotones, BoxLayout.Y_AXIS));
+	    panelBotones.setOpaque(false); 
         
-        JButton btnCrearJugador = new JButton("Crear jugador");
-        JButton btnModificarJugador = new JButton("Modificar jugador");
-        JButton btnListaJugadores = new JButton("Ver lista de jugadores");
-        JButton btnComenzarJuego = new JButton("Comenzar juego");
-        JButton btnSalir = new JButton("Salir");
+	    int botonAncho = 200;
+        int botonAlto = 40;
+        
+        JButton btnCrearJugador = crearBoton("Crear jugador", botonAncho, botonAlto);
+        JButton btnModificarJugador = crearBoton("Modificar jugador", botonAncho, botonAlto);
+        JButton btnListaJugadores = crearBoton("Ver lista de jugadores", botonAncho, botonAlto);
+        JButton btnComenzarJuego = crearBoton("Comenzar juego", botonAncho, botonAlto);
+        JButton btnSalir = crearBoton("Salir", botonAncho, botonAlto);
+        
         
         // Agregar los botones y darles un espaciado
         int espaciado = 20;
@@ -132,6 +149,7 @@ public class VistaGrafica extends JFrame implements IVista {
         // Panel de botones en el centro de la pantalla
         JPanel contenedorBotones = new JPanel();
         contenedorBotones.setLayout(new GridBagLayout());
+        contenedorBotones.setOpaque(false); 
         contenedorBotones.add(panelBotones);
         panelMenu.add(contenedorBotones, BorderLayout.CENTER);
         
