@@ -111,8 +111,17 @@ public class VistaConsola implements IVista {
 			System.out.println("\n" + "---------- NUEVO JUGADOR! -------------" + "\n");
 			System.out.print("Ingrese el nombre del nuevo jugador: ");
 			String nombre = entrada.next();
-			this.controlador.agregarJugador(nombre);
-			System.out.println("Jugador agregado!");
+			
+			if (nombre != null && !nombre.trim().isEmpty()) {
+				
+				this.controlador.agregarJugador(nombre);
+				System.out.println("Jugador agregado con éxito.");
+				
+			} else {
+				
+				System.out.println("El nombre del jugador no puede estar vacio");
+			}
+			
 		} else {
 			System.out.println("\n" + "Ya estan todos los jugadores inscriptos" + "\n");
 		}
@@ -121,11 +130,18 @@ public class VistaConsola implements IVista {
 	// ********************* MODIFICACION **************************
 	
 	private void modificarJugador() {
-		listaJugadores();
+		String[] jugadores = this.controlador.listaJugadores();
+		
+		if (jugadores == null || jugadores.length == 0) {
+			System.out.println("No hay jugadores registrados para modificar.");
+			return;
+		}
+		
 		System.out.print("Por favor, ingrese el numero de jugador que quiere modificar: ");
 		int pos = entrada.nextInt();
-		System.out.print("Por favor, ingrese el numero del nuevo jugador: ");
+		System.out.print("Ingrese el nuevo nombre para el jugador: ");
 		String nombre = entrada.next();
+		
 		boolean creado = controlador.modificarJugador(nombre, pos);
 		if (creado) {
 			System.out.println("Jugador modificado con exito!");

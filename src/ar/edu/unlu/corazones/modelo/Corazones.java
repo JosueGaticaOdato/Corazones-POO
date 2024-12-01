@@ -59,7 +59,7 @@ public class Corazones implements Observable {
 		agregarJugadores("Jugador A");
 		agregarJugadores("Jugador B");
 		agregarJugadores("Jugador C");
-		agregarJugadores("Jugador D");
+		//agregarJugadores("Jugador D");
 
 		this.observadores = new ArrayList<>();
 		this.jugadas = new ArrayList<>();
@@ -93,9 +93,11 @@ public class Corazones implements Observable {
 	
 	public boolean reemplazarJugadores(String nombre,int posicion) {
 		boolean seReemplazo = false;
-		if (!(jugadores[posicion - 1] == null)){
-			seReemplazo = true;
-			jugadores[posicion - 1].setNombre(nombre);
+		if (posicion >= 0 && posicion <= cantJugadores) {
+			if (!(jugadores[posicion - 1] == null)){
+				seReemplazo = true;
+				jugadores[posicion - 1].setNombre(nombre);
+			}
 		}
 		return seReemplazo;
 	}
@@ -181,15 +183,17 @@ public class Corazones implements Observable {
 	
 	//Me muestro una array con los nombre de todos los jugadores
 	public String[] getListaJugadores(){
-		String[] jugadores =  new String[this.jugadores.length];
-		for (int i = 0; i < this.jugadores.length; i++)
-		{
-			jugadores[i] = this.jugadores[i].getNombre();
-				//System.out.println(this.jugadores[i].getNombre());
+		
+		String[] jugadores = new String[cantJugadores];
+		for (int i = 0; i < cantJugadores; i++) {
+			if (this.jugadores[i] != null) {				
+				jugadores[i] = this.jugadores[i].getNombre();
+			} else {
+				jugadores[i] = null;
+			}
 		}
 		return jugadores;
 	}
-
 	
 	// *************************************************************
 	//                      SETTERS
