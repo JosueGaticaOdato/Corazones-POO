@@ -52,9 +52,11 @@ public class Jugada {
 		
 		if(primeraCarta()) {
 			
-			if(cartaEnJuego.getPalo() == Palo.CORAZONES && !corazonesRotos) {
+			if (cartaEnJuego.getPalo() == Palo.CORAZONES && !corazonesRotos) {
 				isCartaValida = false;
-			}else {primeraCartaJugada = cartaEnJuego;}
+			} else {
+				primeraCartaJugada = cartaEnJuego;
+			}
 		}
 		
 		/*El en caso de que no se la primera carta, analizo si la carta que tiro es
@@ -70,6 +72,15 @@ public class Jugada {
 		}
 		
 		return isCartaValida;
+	}
+	
+	public boolean tirarDosDeTrebol(Carta carta, int turno) {
+		boolean dosDeTrebol = false;
+		if (carta.getPalo() == Palo.TREBOL && carta.getValor() == 2) {
+			dosDeTrebol = true;
+			this.cartasJugadas[turno] = carta;
+		}
+		return dosDeTrebol;
 	}
 	
 	//Metodo que determina si es la primera carta jugada: Es fundamental ya que el palo de esta determinada cual es la carta mas alta

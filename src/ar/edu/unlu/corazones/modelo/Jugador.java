@@ -94,6 +94,20 @@ public class Jugador {
 //        return tieneMismoPalo;
 //	}
 	
+	//Comprueba si el jugador tiene el 2 de trebol en su poder
+    public boolean tengoDosDeTrebol() {
+    	boolean loTiene = false;
+    	int pos = 0;
+    	while (!loTiene && pos < mano.size()) {
+    		if (mano.get(pos).getPalo() == Palo.TREBOL && mano.get(pos).getValor() == 2)  {
+            	loTiene = true;
+    		} else {
+    			pos++;
+    		}
+    	}
+        return loTiene;
+    }
+	
 	// *************************************************************
 	//                      GETTERS
 	// *************************************************************

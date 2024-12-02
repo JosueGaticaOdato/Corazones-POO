@@ -71,22 +71,42 @@ public class Corazones implements Observable {
 	
 	public void iniciarJuego() {
 		boolean juegoTerminado = false;
+		
 		while (!juegoTerminado) {
 			mazo = new Mazo();
 			repartirCartas();
 			notificar(EventosCorazones.CARTAS_REPARTIDAS);
 			juegoTerminado = true;
 			this.corazonesRotos = false;
+			
 			for (int j = 0; j < cantCartasRepartidas; j++) {
+				
 				int i = 0;
 				Jugada jugada = new Jugada(this.jugadores);
 				jugadas.add(jugada);
 				
-				while (i < cantJugadores) {
-					notificar(EventosCorazones.PEDIR_CARTA);
+				/*CASO 2 DE TREBOL*/
+				if (j == 0) {
+					primerCarta2Trebol(jugada);
 					i++;
 				}
+				
+				/*1 JUGADA POR CADA JUGADOR*/
+				while (i < cantJugadores) {
+					notificar(EventosCorazones.PEDIR_CARTA);
+					jugarCarta(jugada);
+					i++;
+				}
+				
+				turno = jugada.determinarPerdedor();
+				
 			}
+
+			// Finalizada la ronda, se comprueba si se llego al puntaje maxixo para finalizar el juego
+			if (puntajeMaximoActual() >= puntajeMaximo) {
+				juegoTerminado = true;
+			}
+			
 		}
 		System.out.println("Fin Juego!");
 	}
@@ -102,6 +122,76 @@ public class Corazones implements Observable {
 			}
 		}
 	}
+	
+	private int puntajeMaximoActual() {
+		int max = 0;
+		for (Jugador jugadoresCorazones : jugadores) {
+			if (max <= jugadoresCorazones.getPuntaje()) {
+				max = jugadoresCorazones.getPuntaje();
+			}
+		}
+		return max;
+	}
+	
+	// *************************************************************
+	// 					FUNCIONALIDAD JUGADAS
+	// *************************************************************
+
+	//Para comenzar la ronda es necesario que el jugador que tiene el dos de trebol comience
+	private void primerCarta2Trebol(Jugada jugada) {
+		boolean tengoDosDeTrebol = false;
+		int pos = 0;
+		while (!tengoDosDeTrebol && pos < cantJugadores) {
+			
+			//Obtengo al jugador que tiene el 2 de trebol
+			tengoDosDeTrebol = jugadores[pos].tengoDosDeTrebol();
+			if (tengoDosDeTrebol) {
+				turno = pos;
+				notificar(EventosCorazones.JUGAR_2_DE_TREBOL);
+				boolean dosDeTrebolTirado = false;
+				
+				//Hasta que no tire el dos de trebol no arranca el juego!
+				while ( !dosDeTrebolTirado ) {
+					
+					if (jugada.tirarDosDeTrebol(cartaAJugar, turno)) {
+						
+						jugadores[turno].tirarCarta(jugadores[turno].buscarCarta(cartaAJugar));
+						turno = (turno + 1) % cantJugadores;
+						dosDeTrebolTirado = true;
+						
+					} else {
+						
+						notificar(EventosCorazones.CARTA_TIRADA_INVALIDA_2_DE_TREBOL);
+					}
+					
+				}
+				
+			} else {
+				pos++;
+			}
+		}
+	}
+	
+	
+	private void jugarCarta(Jugada jugada) {
+		
+		boolean cartaTiradaValida = false;
+		while ( !cartaTiradaValida ) {
+			
+			if (jugada.tirarCartaEnMesa(turno, cartaAJugar, false, this.corazonesRotos)) {
+				jugadores[turno].tirarCarta(jugadores[turno].buscarCarta(cartaAJugar));
+				turno = (turno + 1) % cantJugadores;
+				cartaTiradaValida = true;
+				
+			} else {
+				
+				notificar(EventosCorazones.CARTA_TIRADA_INVALIDA);
+				
+			}
+		}
+		
+	}
+
 	
 	// *************************************************************
 	// 						ALTA Y MODIFICACION
@@ -192,12 +282,12 @@ public class Corazones implements Observable {
 		return turno;
 	}
 	
-	/*
+	
 	public Carta[] getCartasEnMesa(){
 		return this.jugadas.get(jugadas.size() - 1).getCartasJugadas();
 	}
 	
-
+	/*
 	public Jugador getJugadorPerdedorJugada() {
 		return this.jugadas.get(jugadas.size() - 1).getJugadorPerdedor();
 	}*/
@@ -239,6 +329,10 @@ public class Corazones implements Observable {
 	// *************************************************************
 	//                      SETTERS
 	// *************************************************************
+	
+	public void setCartaAJugar(int pos) {
+		cartaAJugar = jugadores[turno].obtenerCartaJugador(pos);
+	}
 	
 	// *************************************************************
 	//					 MVC Y OBSERVER

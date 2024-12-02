@@ -18,11 +18,22 @@ public interface IVista {
 
 	void pedirCarta();
 	
+	void jugarDosDeTrebol();
+
+	void cartaTiradaInvalida();
+	
+	void cartaTiradaInvalida2deTrebol();
+	
 	// *************************************************************
 	//                		 OBSERVER
 	// *************************************************************
 	
 	void setControlador(Controlador controlador);
+
+
+
+
+
 
 	
 

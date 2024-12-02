@@ -78,9 +78,13 @@ public class Controlador implements Observador {
 		return this.modelo.getPosicionJugadorActual();
 	}
 	
-	public String cartasEnMesa() {
+	public void cartaJugada(int i) {
+		this.modelo.setCartaAJugar(i);
+	}
+	
+	public Carta[] cartasEnMesa() {
 		// TODO Auto-generated method stub
-		return "s";
+		return this.modelo.getCartasEnMesa();
 	}
 	
 	// *************************************************************
@@ -97,6 +101,15 @@ public class Controlador implements Observador {
 				break;
 			case PEDIR_CARTA:
 				this.vista.pedirCarta();
+				break;
+			case JUGAR_2_DE_TREBOL:
+				this.vista.jugarDosDeTrebol();
+				break;
+			case CARTA_TIRADA_INVALIDA:
+				this.vista.cartaTiradaInvalida();
+				break;
+			case CARTA_TIRADA_INVALIDA_2_DE_TREBOL:
+				this.vista.cartaTiradaInvalida2deTrebol();
 				break;
 			}
 		}

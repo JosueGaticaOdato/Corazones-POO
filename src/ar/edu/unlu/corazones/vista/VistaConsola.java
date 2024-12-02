@@ -70,7 +70,22 @@ public class VistaConsola implements IVista {
 		System.out.println("*    JUGADOR #" + this.controlador.nombreJugadorActual() + "    *");
 		System.out.println("*      CARTAS EN MESA      *");
 		System.out.println();
-		System.out.println(this.controlador.cartasEnMesa());
+		String mano = "";
+		Carta[] cartasEnMesa = this.controlador.cartasEnMesa();
+		for (int i = 0; i < cartasEnMesa.length ; i++) {
+			
+			Carta carta = cartasEnMesa[i];
+			
+			if (carta != null) {
+				mano = (i+1) + ") " + carta.mostrarCarta();
+				System.out.println(mano);
+			} else {
+				mano = (i+1) + ") " + "sin jugar";
+				System.out.println(mano);
+			}
+			
+		}
+		System.out.println();
 		System.out.println();
 		System.out.println("****************************");
 		System.out.println();
@@ -243,9 +258,39 @@ public class VistaConsola implements IVista {
 		manoJugador();
 		System.out.print("Elija una carta: ");
 		int posCarta = entrada.nextInt();
-		//controlador.cartaJugada(posCarta - 1); //Paso la carta
+		controlador.cartaJugada(posCarta - 1); //Paso la carta
 		continuar();
 	}
+
+	// ******************** JUGAR DOS DE TREBOL ********************
+	
+	@Override
+	public void jugarDosDeTrebol() {
+		// TODO Auto-generated method stub
+		System.out.println("Como es la primer jugada, el jugador " + this.controlador.nombreJugadorActual() +
+				" debe iniciar el juego tirando el 2 de Trebol");
+		continuar();
+		pedirCarta();
+	}
+	
+	// ****************** CARTA TIRADA INVALIDA ********************
+	
+	@Override
+	public void cartaTiradaInvalida() {
+		// TODO Auto-generated method stub
+		System.out.println("La carta que seleccioanste es invalida. Por favor, intentalo denuevo.");
+		continuar();
+		pedirCarta();
+	}
+	
+	@Override
+	public void cartaTiradaInvalida2deTrebol() {
+		// TODO Auto-generated method stub
+		System.out.println("La carta que seleccioanste es invalida. Para comenzar el juego si o si tienes que tirar el 2 de Trebol. Por favor, intentalo denuevo.");
+		continuar();
+		pedirCarta();
+	}
+	
 	
 	// *************************************************************
 	//                		 OBSERVER
@@ -261,6 +306,12 @@ public class VistaConsola implements IVista {
 	public void cartasRepartidas() {
 		// TODO Auto-generated method stub
 	}
+
+
+
+
+
+
 
 
 
