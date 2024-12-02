@@ -2,20 +2,28 @@ package ar.edu.unlu.corazones.vista;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import ar.edu.unlu.corazones.controlador.Controlador;
+import ar.edu.unlu.corazones.modelo.Carta;
 import ar.edu.unlu.corazones.vista.gui.FondoTapete;
+import ar.edu.unlu.corazones.vista.gui.VistaCarta;
 
 public class VistaGrafica extends JFrame implements IVista{
 	
@@ -32,8 +40,14 @@ public class VistaGrafica extends JFrame implements IVista{
 	private CardLayout cardLayout;
 	
 	private JPanel panelMenu;
+	
+	private JPanel panelJuego;
+	private JPanel panelNorte;
+	private JPanel panelSur;
+	private JPanel panelEste;
+	private JPanel panelOeste;
+	private JPanel panelCentro;
 
-	//private JPanel contentPane;
 	
 	// *************************************************************
 	//                        CONSTRUCTOR
@@ -63,27 +77,14 @@ public class VistaGrafica extends JFrame implements IVista{
         cardLayout.show(panelPrincipal, vista);
     }
     
-    private void crearVistas() {
-    	crearMenu();
-        //crearVistaJuego(); // Crea la vista del juego
-    }
-    
- // Método para crear botones con tamaño fijo
-    private JButton crearBoton(String texto, int ancho, int alto) {
-        JButton boton = new JButton(texto);
-        boton.setMaximumSize(new Dimension(ancho, alto));
-        boton.setPreferredSize(new Dimension(ancho, alto));
-        boton.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrar el botón en el panel
-        return boton;
-    }
-    
+
 	// *************************************************************
 	//                         PRE-JUEGO
 	// *************************************************************
     
 	@Override
 	public void iniciar() {
-		crearVistas();
+		crearMenu();
 		setVisible(true);
 		mostrarVista("menu");
 	}
@@ -138,11 +139,7 @@ public class VistaGrafica extends JFrame implements IVista{
         
         btnListaJugadores.addActionListener(e -> listarJugadores());
         
-        btnComenzarJuego.addActionListener(e -> {
-        	System.out.println("Click Comenzar juego");
-        	//controlador.comenzarJuego();
-        	//mostrarVista("juego"); // Cambiar a la vista de juego
-        });	
+        btnComenzarJuego.addActionListener(e -> comenzarJuego());	
         
         btnSalir.addActionListener(e -> System.exit(0));
         
@@ -156,6 +153,16 @@ public class VistaGrafica extends JFrame implements IVista{
         panelPrincipal.add(panelMenu, "menu");
 	}
 
+	// Método para crear botones con tamaño fijo
+    private JButton crearBoton(String texto, int ancho, int alto) {
+        JButton boton = new JButton(texto);
+        boton.setMaximumSize(new Dimension(ancho, alto));
+        boton.setPreferredSize(new Dimension(ancho, alto));
+        boton.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrar el botón en el panel
+        return boton;
+    }
+    
+    
 	// ************************* ALTA ******************************
 	
 	private void nuevoJugador() {
@@ -247,6 +254,80 @@ public class VistaGrafica extends JFrame implements IVista{
 	                                  "Lista de Jugadores", JOptionPane.INFORMATION_MESSAGE);
 	}
 
+	// ******************* COMENZAR JUEGO **** *********************
+	
+	private void comenzarJuego() {
+    	if ( this.controlador.isCantidadJugadoresValida() ) {
+    		
+    		JOptionPane.showMessageDialog(this, "Juego comenzado!", 
+                    "Juego iniciado", JOptionPane.INFORMATION_MESSAGE);
+    		controlador.comenzarJuego();
+    		crearVistaJuego();
+    		mostrarVista("juego"); // Cambiar a la vista de juego
+    		
+    	} else {
+    		
+    		JOptionPane.showMessageDialog(this, "Faltan jugadores para comenzar el juego", 
+                    "Jugadores insuficientes", JOptionPane.ERROR_MESSAGE);
+    	}
+    }
+	
+	// *************************************************************
+	//                          JUEGO
+	// *************************************************************
+	
+	private void crearVistaJuego() {
+		panelJuego = new JPanel(new BorderLayout());
+		panelJuego.setOpaque(false); 
+		
+		//Paneles para cada jugador
+		panelSur = crearPanelJugador(this.controlador.listaJugadores()[0]);
+        panelNorte = crearPanelJugador(this.controlador.listaJugadores()[1]);
+        panelEste = crearPanelJugador(this.controlador.listaJugadores()[2]);
+        panelOeste = crearPanelJugador(this.controlador.listaJugadores()[3]);
+        
+        // Panel central para cartas jugadas
+        panelCentro = new JPanel();
+        panelCentro.setOpaque(false);
+        panelCentro.setLayout(new GridLayout(2, 2, 10, 10)); // Espacio para las cartas  
+        
+        panelJuego.add(panelNorte, BorderLayout.NORTH);
+        panelJuego.add(panelSur, BorderLayout.SOUTH);
+        panelJuego.add(panelEste, BorderLayout.EAST);
+        panelJuego.add(panelOeste, BorderLayout.WEST);
+        panelJuego.add(panelCentro, BorderLayout.CENTER);
+	
+        panelPrincipal.add(panelJuego, "juego");
+	}
+	
+	private JPanel crearPanelJugador(String nombreJugador) {
+	    JPanel panel = new JPanel(new BorderLayout());
+	    panel.setOpaque(false);
+	    panel.setPreferredSize(new Dimension(150, 200));
+	    
+	    //Etiqueta que tiene el nombre del jugador 
+	    JLabel etiqueta = new JLabel(nombreJugador, SwingConstants.CENTER);
+	    etiqueta.setForeground(Color.WHITE);
+	    panel.add(etiqueta, BorderLayout.NORTH);
+	    
+	    // Contenedor para las cartas
+	    JPanel contenedorCartas = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
+	    contenedorCartas.setBackground(new Color(50, 100, 50));
+	    contenedorCartas.setOpaque(true);
+	    panel.add(contenedorCartas, BorderLayout.CENTER);
+
+	    // Asocio el nombre del jugador con el contenedor
+	    contenedorCartas.setName(nombreJugador);
+	    
+	    return panel;
+	}
+	
+
+	
+	@Override
+	public void cartasRepartidas() {
+		System.out.println("Cartas repartidas");
+	}
 	
 	// *************************************************************
 	//                		 OBSERVER

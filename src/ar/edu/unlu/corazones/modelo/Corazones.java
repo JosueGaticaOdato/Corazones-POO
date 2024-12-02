@@ -59,7 +59,7 @@ public class Corazones implements Observable {
 		agregarJugadores("Jugador A");
 		agregarJugadores("Jugador B");
 		agregarJugadores("Jugador C");
-		//agregarJugadores("Jugador D");
+		agregarJugadores("Jugador D");
 
 		this.observadores = new ArrayList<>();
 		this.jugadas = new ArrayList<>();
@@ -70,7 +70,27 @@ public class Corazones implements Observable {
 	// ************************************************************
 	
 	public void iniciarJuego() {
-		System.out.println("Iniciar Juego!");
+		boolean juegoTerminado = false;
+		while (!juegoTerminado) {
+			mazo = new Mazo();
+			repartirCartas();
+			notificar(EventosCorazones.CARTAS_REPARTIDAS);
+			juegoTerminado = true;
+			this.corazonesRotos = false;
+		}
+		System.out.println("Fin Juego!");
+	}
+	
+	// *************************************************************
+	// 					FUNCIONALIDAD RONDA
+	// *************************************************************
+	
+	private void repartirCartas() {
+		for (int i = 0; i < cantCartasRepartidas; i++) {
+			for (Jugador jugador : jugadores) {
+				jugador.recibirCarta(mazo.sacarCarta());
+			}
+		}
 	}
 	
 	// *************************************************************
@@ -164,11 +184,12 @@ public class Corazones implements Observable {
 	
 	public Jugador getJugadorPerdedorJugada() {
 		return this.jugadas.get(jugadas.size() - 1).getJugadorPerdedor();
-	}
+	}*/
 	
 	public int getNumeroJugada() {
-		return this.jugadas.get(jugadas.size()-1).getNumeroJugada();
-	}*/
+		return 1;
+		//return this.jugadas.get(jugadas.size()-1).getNumeroJugada();
+	}
 	
 	public boolean isCantidadJugadoresValida() {
 	    int jugadoresRegistrados = 0;
@@ -193,6 +214,10 @@ public class Corazones implements Observable {
 			}
 		}
 		return jugadores;
+	}
+	
+	public ArrayList<Carta> getManoJugador(int pos) {
+		return this.jugadores[pos].getMano();
 	}
 	
 	// *************************************************************

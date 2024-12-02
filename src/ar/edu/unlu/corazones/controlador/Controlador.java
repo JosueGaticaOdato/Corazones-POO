@@ -1,6 +1,10 @@
 package ar.edu.unlu.corazones.controlador;
 
+import java.util.ArrayList;
+
+import ar.edu.unlu.corazones.modelo.Carta;
 import ar.edu.unlu.corazones.modelo.Corazones;
+import ar.edu.unlu.corazones.modelo.EventosCorazones;
 import ar.edu.unlu.corazones.observer.Observable;
 import ar.edu.unlu.corazones.observer.Observador;
 import ar.edu.unlu.corazones.vista.IVista;
@@ -52,6 +56,20 @@ public class Controlador implements Observador {
 		this.modelo.iniciarJuego();
 	}
 	
+	// ************************ JUEGO ******************************
+	
+	public int numeroRonda() {
+		return this.modelo.getRonda();
+	}
+
+	public int numeroJugada() {
+		return this.modelo.getNumeroJugada();
+	}
+	
+	public ArrayList<Carta> manoJugador(int pos){
+		return this.modelo.getManoJugador(pos);
+	} 
+	
 	// *************************************************************
 	//                       OBSERVER
 	// *************************************************************
@@ -59,8 +77,16 @@ public class Controlador implements Observador {
 	@Override
 	public void actualizar(Object evento, Observable observado) {
 		// TODO Auto-generated method stub
-		
+		if (evento instanceof EventosCorazones) {
+			switch ((EventosCorazones) evento) {
+			case CARTAS_REPARTIDAS:
+				this.vista.cartasRepartidas();
+				break;
+			}
+		}
 	}
+
+
 	
 
 }

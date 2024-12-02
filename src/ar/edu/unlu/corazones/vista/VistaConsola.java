@@ -48,6 +48,20 @@ public class VistaConsola implements IVista {
 	  System.out.println();
 	 }
 	}
+	
+	private void combinacionRondaJugada() {
+		System.out.println("****************************");
+		System.out.println("*         RONDA #" + this.controlador.numeroRonda() + "         *");
+		System.out.println("*    	  JUGADA #" + this.controlador.numeroJugada() + "        *");
+		System.out.println("****************************");
+	}
+	
+	private void combinacionRondaPasaje() {
+		System.out.println("****************************");
+	    System.out.println("*         RONDA #" + this.controlador.numeroRonda() + "         *");
+		System.out.println("*     PASAJE DE CARTAS     *");
+		System.out.println("****************************");
+	}
 
 	
 	// *************************************************************
@@ -173,7 +187,13 @@ public class VistaConsola implements IVista {
 	// *************************************************************
 	
 	public void jugar() {
-		System.out.println("Jugar desde consola");
+		if ( this.controlador.isCantidadJugadoresValida() ) {
+			System.out.println("Juego comenzado!");
+			continuar();
+			controlador.comenzarJuego();
+		} else {
+			System.out.println("Faltan jugadores para comenzar el juego");
+		}
 	}
 	
 	// *************************************************************
@@ -184,6 +204,11 @@ public class VistaConsola implements IVista {
 	public void setControlador(Controlador controlador) {
 		// TODO Auto-generated method stub
 		this.controlador = controlador;
+	}
+
+	@Override
+	public void cartasRepartidas() {
+		// TODO Auto-generated method stub
 	}
 
 	
