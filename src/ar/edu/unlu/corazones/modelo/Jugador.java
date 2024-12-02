@@ -59,6 +59,40 @@ public class Jugador {
 	//                 FUNCION EN CORAZONES (sin implementar aun)
 	// *************************************************************
 	
+//	public String[] cartasJugablesConola(Carta primeraCartaJugada, boolean corazonesRotos) {
+//		// TODO Auto-generated method stub
+//		String manoJugable = new ArrayList<Carta>();
+//		
+//		//Si la primer carta es nula o no tiene otra carta del mismo palo por jugar, muestro mano completa
+//		if (primeraCartaJugada == null || !tieneCartasDelMismoPalo(primeraCartaJugada) || corazonesRotos)) {
+//			manoJugable = getMano();
+//		} else {
+//			for (int i = 0; i < mano.size() ; i ++) {
+//				Carta carta = mano.get(i);
+//				s += (i+1) + ") " + carta.mostrarCarta();
+//				//Si son de distinto palo, no la puede tirar
+//				if (carta.getPalo() != primeraCartaJugada.getPalo()){
+//					s += " X";
+//				}
+//				s += "\n";
+//			}
+//		}
+//		return manoJugable ;
+//	}
+//	
+//	//Consulta al jugador si, de las cartas que tiene en su mano, no tiene en mismo palo de la que esta en mesa
+//	public Boolean tieneCartasDelMismoPalo(Carta carta) {
+//    	boolean tieneMismoPalo = false;
+//    	int pos = 0;
+//    	while (!tieneMismoPalo && pos < mano.size() && carta != null) {
+//    		if (mano.get(pos).getPalo() == carta.getPalo())  {
+//    			tieneMismoPalo = true;
+//    		} else {
+//    			pos++;
+//    		}
+//    	}
+//        return tieneMismoPalo;
+//	}
 	
 	// *************************************************************
 	//                      GETTERS
@@ -96,6 +130,8 @@ public class Jugador {
 	public void setPuntaje(int puntaje) {
 		this.puntaje = puntaje;
 	}
+
+
 
 	
 }

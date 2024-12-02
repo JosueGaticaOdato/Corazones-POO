@@ -77,6 +77,16 @@ public class Corazones implements Observable {
 			notificar(EventosCorazones.CARTAS_REPARTIDAS);
 			juegoTerminado = true;
 			this.corazonesRotos = false;
+			for (int j = 0; j < cantCartasRepartidas; j++) {
+				int i = 0;
+				Jugada jugada = new Jugada(this.jugadores);
+				jugadas.add(jugada);
+				
+				while (i < cantJugadores) {
+					notificar(EventosCorazones.PEDIR_CARTA);
+					i++;
+				}
+			}
 		}
 		System.out.println("Fin Juego!");
 	}
@@ -142,9 +152,9 @@ public class Corazones implements Observable {
 		return jugadas;
 	}
 
-	public int getTurno() {
-		return turno;
-	}
+//	public int getTurno() {
+//		return turno;
+//	}
 
 	public Direccion getDireccion() {
 		return direccion;
@@ -174,14 +184,20 @@ public class Corazones implements Observable {
 	//                  GETTERS ESPECIALES
 	// *************************************************************
 	
-	public Jugador getJugadorActual() {
-		return jugadores[turno];
+	public String getNombreJugadorActual() {
+		return jugadores[turno].getNombre();
 	}
 	
-	/*public Carta[] getCartasEnMesa(){
+	public int getPosicionJugadorActual() {
+		return turno;
+	}
+	
+	/*
+	public Carta[] getCartasEnMesa(){
 		return this.jugadas.get(jugadas.size() - 1).getCartasJugadas();
 	}
 	
+
 	public Jugador getJugadorPerdedorJugada() {
 		return this.jugadas.get(jugadas.size() - 1).getJugadorPerdedor();
 	}*/
@@ -239,5 +255,7 @@ public class Corazones implements Observable {
 	public void agregarObservador(Observador observador) {
 		this.observadores.add(observador);
 	}
+
+
 	
 }

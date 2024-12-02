@@ -52,7 +52,7 @@ public class Controlador implements Observador {
 		return this.modelo.reemplazarJugadores(nombre, pos);
 	}
 	
-	public void comenzarJuego() {
+	public void iniciarJuego() {
 		this.modelo.iniciarJuego();
 	}
 	
@@ -70,6 +70,19 @@ public class Controlador implements Observador {
 		return this.modelo.getManoJugador(pos);
 	} 
 	
+	public String nombreJugadorActual() {
+		return this.modelo.getNombreJugadorActual();
+	}
+	
+	public int posicionJugadorActual() {
+		return this.modelo.getPosicionJugadorActual();
+	}
+	
+	public String cartasEnMesa() {
+		// TODO Auto-generated method stub
+		return "s";
+	}
+	
 	// *************************************************************
 	//                       OBSERVER
 	// *************************************************************
@@ -82,9 +95,16 @@ public class Controlador implements Observador {
 			case CARTAS_REPARTIDAS:
 				this.vista.cartasRepartidas();
 				break;
+			case PEDIR_CARTA:
+				this.vista.pedirCarta();
+				break;
 			}
 		}
 	}
+
+
+
+	
 
 
 	

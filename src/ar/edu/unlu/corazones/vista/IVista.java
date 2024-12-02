@@ -14,6 +14,9 @@ public interface IVista {
 	//                          JUEGO
 	// *************************************************************
 	
+	void cartasRepartidas();
+
+	void pedirCarta();
 	
 	// *************************************************************
 	//                		 OBSERVER
@@ -21,7 +24,7 @@ public interface IVista {
 	
 	void setControlador(Controlador controlador);
 
-	void cartasRepartidas();
+	
 
 	
 }

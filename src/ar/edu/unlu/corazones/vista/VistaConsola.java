@@ -1,8 +1,10 @@
 package ar.edu.unlu.corazones.vista;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import ar.edu.unlu.corazones.controlador.Controlador;
+import ar.edu.unlu.corazones.modelo.Carta;
 
 public class VistaConsola implements IVista {
 	
@@ -61,6 +63,33 @@ public class VistaConsola implements IVista {
 	    System.out.println("*         RONDA #" + this.controlador.numeroRonda() + "         *");
 		System.out.println("*     PASAJE DE CARTAS     *");
 		System.out.println("****************************");
+	}
+	
+	private void turnoJugador() {
+		System.out.println("****************************");
+		System.out.println("*    JUGADOR #" + this.controlador.nombreJugadorActual() + "    *");
+		System.out.println("*      CARTAS EN MESA      *");
+		System.out.println();
+		System.out.println(this.controlador.cartasEnMesa());
+		System.out.println();
+		System.out.println("****************************");
+		System.out.println();
+	}
+	
+	private void manoJugador() {
+		System.out.println();
+		System.out.println("     	    MANO            ");
+		System.out.println("----------------------------");
+		String mano = "";
+		ArrayList<Carta> manoJugador = this.controlador.manoJugador(this.controlador.posicionJugadorActual());
+		for (int i = 0; i < manoJugador.size() ; i++) {
+			Carta carta = manoJugador.get(i);
+			mano = (i+1) + ") " + carta.mostrarCarta();
+			System.out.println(mano);
+		}
+		System.out.println("----------------------------");
+		System.out.println();
+		System.out.println();
 	}
 
 	
@@ -190,10 +219,32 @@ public class VistaConsola implements IVista {
 		if ( this.controlador.isCantidadJugadoresValida() ) {
 			System.out.println("Juego comenzado!");
 			continuar();
-			controlador.comenzarJuego();
+			controlador.iniciarJuego();
 		} else {
 			System.out.println("Faltan jugadores para comenzar el juego");
 		}
+	}
+	
+	// ************ PEDIR CARTAS (para tirar en mesa) **************
+	
+	@Override
+	public void pedirCarta() {
+		// TODO Auto-generated method stub
+		combinacionRondaJugada();
+		System.out.println("Es el turno del jugador: "
+				+ this.controlador.nombreJugadorActual()); //Digo quien tiene que jugar
+		continuar();
+		combinacionRondaJugada();
+		turnoJugador();
+		/*
+		 if (this.controlador.isCorazonesRotos()) {
+			System.out.println("------------- ¡CORAZONES ROTOS! -------------"  + "\n");}
+		 */
+		manoJugador();
+		System.out.print("Elija una carta: ");
+		int posCarta = entrada.nextInt();
+		//controlador.cartaJugada(posCarta - 1); //Paso la carta
+		continuar();
 	}
 	
 	// *************************************************************
@@ -210,6 +261,8 @@ public class VistaConsola implements IVista {
 	public void cartasRepartidas() {
 		// TODO Auto-generated method stub
 	}
+
+
 
 	
 	

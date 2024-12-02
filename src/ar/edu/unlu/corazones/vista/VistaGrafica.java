@@ -139,7 +139,7 @@ public class VistaGrafica extends JFrame implements IVista{
         
         btnListaJugadores.addActionListener(e -> listarJugadores());
         
-        btnComenzarJuego.addActionListener(e -> comenzarJuego());	
+        btnComenzarJuego.addActionListener(e -> iniciarJuego());	
         
         btnSalir.addActionListener(e -> System.exit(0));
         
@@ -254,17 +254,14 @@ public class VistaGrafica extends JFrame implements IVista{
 	                                  "Lista de Jugadores", JOptionPane.INFORMATION_MESSAGE);
 	}
 
-	// ******************* COMENZAR JUEGO **** *********************
+	// ******************* COMENZAR JUEGO *************************
 	
-	private void comenzarJuego() {
+	private void iniciarJuego() {
     	if ( this.controlador.isCantidadJugadoresValida() ) {
     		
     		JOptionPane.showMessageDialog(this, "Juego comenzado!", 
                     "Juego iniciado", JOptionPane.INFORMATION_MESSAGE);
-    		controlador.comenzarJuego();
-    		crearVistaJuego();
-    		mostrarVista("juego"); // Cambiar a la vista de juego
-    		
+    		controlador.iniciarJuego();    		
     	} else {
     		
     		JOptionPane.showMessageDialog(this, "Faltan jugadores para comenzar el juego", 
@@ -323,11 +320,61 @@ public class VistaGrafica extends JFrame implements IVista{
 	}
 	
 
+	// ****************** CARTAS REPARTIDAS ************************
 	
 	@Override
 	public void cartasRepartidas() {
+		crearVistaJuego();
+		mostrarVista("juego"); // Cambiar a la vista de juego
+		
+		String[] jugadores = this.controlador.listaJugadores();
+		for (int i = 0; i < this.controlador.cantidadJugadores(); i++) {
+			ArrayList<Carta> cartasJugador = this.controlador.manoJugador(i);
+			
+			mostrarCartasJugador(jugadores[i], cartasJugador);
+		}
+		
 		System.out.println("Cartas repartidas");
 	}
+	
+	private void mostrarCartasJugador(String nombreJugador, ArrayList<Carta> cartas) {
+		JPanel contenedorCartas = obtenerContenedorCartas(nombreJugador);
+		
+		for (Carta carta: cartas) {
+			VistaCarta vistaCarta = new VistaCarta(carta);
+			contenedorCartas.add(vistaCarta);
+		}
+		
+		// Refrescar la vista
+        contenedorCartas.revalidate();
+        contenedorCartas.repaint();
+	}
+	
+	private JPanel obtenerContenedorCartas(String nombreJugador) {
+	    JPanel[] panelesJugadores = { panelSur, panelNorte, panelEste, panelOeste };
+	    
+	    for (JPanel panelJugador : panelesJugadores) {
+	        for (Component componente : panelJugador.getComponents()) {
+	            if (componente instanceof JPanel) {
+	                JPanel contenedorCartas = (JPanel) componente;
+	                if (nombreJugador.equals(contenedorCartas.getName())) {
+	                    return contenedorCartas;
+	                }
+	            }
+	        }
+	    }
+	    
+	    return null; // No se encontró el contenedor
+    }
+	
+	// ********************** PEDIR CARTA ***************************
+	
+	@Override
+	public void pedirCarta() {
+		// TODO Auto-generated method stub
+		System.out.println("Pedir cartas");
+	}
+
 	
 	// *************************************************************
 	//                		 OBSERVER
@@ -337,5 +384,6 @@ public class VistaGrafica extends JFrame implements IVista{
 	public void setControlador(Controlador controlador) {
 		this.controlador = controlador;
 	}
+
 
 }
