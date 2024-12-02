@@ -51,7 +51,9 @@ public class VistaConsola implements IVista {
 	 }
 	}
 	
+
 	private void combinacionRondaJugada() {
+		puntaje();
 		System.out.println("****************************");
 		System.out.println("*         RONDA #" + this.controlador.numeroRonda() + "         *");
 		System.out.println("*    	  JUGADA #" + this.controlador.numeroJugada() + "        *");
@@ -68,28 +70,43 @@ public class VistaConsola implements IVista {
 	private void turnoJugador() {
 		System.out.println("****************************");
 		System.out.println("*    JUGADOR #" + this.controlador.nombreJugadorActual() + "    *");
+		cartasEnMesa();
+	}
+	
+	private void cartasEnMesa() {
 		System.out.println("*      CARTAS EN MESA      *");
 		System.out.println();
-		String mano = "";
 		Carta[] cartasEnMesa = this.controlador.cartasEnMesa();
 		for (int i = 0; i < cartasEnMesa.length ; i++) {
 			
 			Carta carta = cartasEnMesa[i];
 			
 			if (carta != null) {
-				mano = (i+1) + ") " + carta.mostrarCarta();
-				System.out.println(mano);
+				System.out.println((i+1) + ") " + this.controlador.getJugador(i) +
+						": " + carta.mostrarCarta());
 			} else {
-				mano = (i+1) + ") " + "sin jugar";
-				System.out.println(mano);
+				System.out.println((i+1) + ") " + this.controlador.getJugador(i) +
+						": " + "sin jugar");
 			}
 			
 		}
 		System.out.println();
-		System.out.println();
 		System.out.println("****************************");
 		System.out.println();
 	}
+	
+	private void puntaje() {
+		System.out.println("*          PUNTAJE         *");
+		System.out.println();
+		int[] puntajes = this.controlador.puntajesJugadores();
+		for (int i = 0; i < puntajes.length; i++) {
+			System.out.println((i+1) + ") " + this.controlador.getJugador(i) + 
+					" -> " + puntajes[i]);
+		}
+		System.out.println();
+		System.out.println("****************************");
+	}
+	
 	
 	private void manoJugador() {
 		System.out.println();
@@ -188,13 +205,7 @@ public class VistaConsola implements IVista {
 	// ********************* MODIFICACION **************************
 	
 	private void modificarJugador() {
-		String[] jugadores = this.controlador.listaJugadores();
-		
-		if (jugadores == null || jugadores.length == 0) {
-			System.out.println("No hay jugadores registrados para modificar.");
-			return;
-		}
-		
+		listaJugadores();
 		System.out.print("Por favor, ingrese el numero de jugador que quiere modificar: ");
 		int pos = entrada.nextInt();
 		System.out.print("Ingrese el nuevo nombre para el jugador: ");
@@ -291,6 +302,19 @@ public class VistaConsola implements IVista {
 		pedirCarta();
 	}
 	
+	// ******************** PERDEDOR JUGADA ************************
+	
+	@Override
+	public void perdedorJugada() {
+		combinacionRondaJugada();
+		cartasEnMesa();
+		
+		System.out.println("El perdedor de esta jugada es " + this.controlador.jugadorPerdedorJugada() + "\n");
+		
+		continuar();
+	}
+
+	
 	
 	// *************************************************************
 	//                		 OBSERVER
@@ -306,15 +330,5 @@ public class VistaConsola implements IVista {
 	public void cartasRepartidas() {
 		// TODO Auto-generated method stub
 	}
-
-
-
-
-
-
-
-
-
-	
 	
 }

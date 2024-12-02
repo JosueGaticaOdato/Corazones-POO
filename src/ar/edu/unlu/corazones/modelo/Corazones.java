@@ -99,6 +99,7 @@ public class Corazones implements Observable {
 				}
 				
 				turno = jugada.determinarPerdedor();
+				notificar(EventosCorazones.PERDEDOR_JUGADA);
 				
 			}
 
@@ -202,7 +203,7 @@ public class Corazones implements Observable {
 		int pos = 0;
 		while (!hayEspacio && pos < jugadores.length) {
 			if (jugadores[pos] == null) {
-				jugadores[pos] = new Jugador(nombre, pos);
+				jugadores[pos] = new Jugador(nombre);
 				hayEspacio = true; //Solamente se dan altas si hay lugares disponibles
 			} else {
 				pos++;
@@ -274,6 +275,9 @@ public class Corazones implements Observable {
 	//                  GETTERS ESPECIALES
 	// *************************************************************
 	
+	public String getJugador(int i) {
+		return jugadores[i].getNombre();
+	}
 	public String getNombreJugadorActual() {
 		return jugadores[turno].getNombre();
 	}
@@ -282,19 +286,16 @@ public class Corazones implements Observable {
 		return turno;
 	}
 	
-	
 	public Carta[] getCartasEnMesa(){
 		return this.jugadas.get(jugadas.size() - 1).getCartasJugadas();
 	}
 	
-	/*
-	public Jugador getJugadorPerdedorJugada() {
-		return this.jugadas.get(jugadas.size() - 1).getJugadorPerdedor();
-	}*/
+	public String getJugadorPerdedorJugada() {
+		return this.jugadas.get(jugadas.size() - 1).getJugadorPerdedor().getNombre();
+	}
 	
 	public int getNumeroJugada() {
-		return 1;
-		//return this.jugadas.get(jugadas.size()-1).getNumeroJugada();
+		return this.jugadas.get(jugadas.size()-1).getNumeroJugada();
 	}
 	
 	public boolean isCantidadJugadoresValida() {
@@ -326,6 +327,14 @@ public class Corazones implements Observable {
 		return this.jugadores[pos].getMano();
 	}
 	
+	public int[] puntajesJugadores() {
+		int[] puntajes = new int[cantJugadores];
+		for (int i = 0; i < cantJugadores; i++) {
+			puntajes[i] = this.jugadores[i].getPuntaje();
+		}
+		return puntajes;
+	}
+	
 	// *************************************************************
 	//                      SETTERS
 	// *************************************************************
@@ -349,6 +358,8 @@ public class Corazones implements Observable {
 	public void agregarObservador(Observador observador) {
 		this.observadores.add(observador);
 	}
+
+
 
 
 	

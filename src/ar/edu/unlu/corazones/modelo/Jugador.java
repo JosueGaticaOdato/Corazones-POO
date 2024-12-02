@@ -18,9 +18,9 @@ public class Jugador {
 	//                       CONSTRUCTOR
 	// *************************************************************
 	
-	public Jugador(String nombre, int posicion) {
-		this.nombre = nombre;
-		this.puntaje = 0;
+	public Jugador(String nombre) {
+		setNombre(nombre);
+		setPuntaje(0);
 		mano = new ArrayList<Carta>();
 	}
 	
@@ -106,6 +106,10 @@ public class Jugador {
     		}
     	}
         return loTiene;
+    }
+    
+    public void sumarPuntaje(int puntaje) {
+		this.puntaje += puntaje;
     }
 	
 	// *************************************************************

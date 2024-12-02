@@ -79,6 +79,7 @@ public class Jugada {
 		if (carta.getPalo() == Palo.TREBOL && carta.getValor() == 2) {
 			dosDeTrebol = true;
 			this.cartasJugadas[turno] = carta;
+			primeraCartaJugada = carta;
 		}
 		return dosDeTrebol;
 	}
@@ -120,7 +121,7 @@ public class Jugada {
 	
 	private void contarPuntos(int posPerdedorJugadas) {
 		for (Carta cartaConseguida : cartasJugadas) {
-			jugadores[posPerdedorJugadas].setPuntaje(puntajeCarta(cartaConseguida));
+			jugadores[posPerdedorJugadas].sumarPuntaje(puntajeCarta(cartaConseguida));
 		}
 	}
 	
