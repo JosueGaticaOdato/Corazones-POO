@@ -179,8 +179,9 @@ public class Corazones implements Observable {
 		boolean cartaTiradaValida = false;
 		while ( !cartaTiradaValida ) {
 			
-			if (jugada.tirarCartaEnMesa(turno, cartaAJugar, false, this.corazonesRotos)) {
+			if (jugada.tirarCartaEnMesa(turno, cartaAJugar, this.corazonesRotos)) {
 				jugadores[turno].tirarCarta(jugadores[turno].buscarCarta(cartaAJugar));
+				tiroCorazones();
 				turno = (turno + 1) % cantJugadores;
 				cartaTiradaValida = true;
 				
@@ -191,6 +192,14 @@ public class Corazones implements Observable {
 			}
 		}
 		
+	}
+	
+	// Metodo para indicar que un jugador tiro la carta de corazones
+	private void tiroCorazones() {
+		if (cartaAJugar.getPalo() == Palo.CORAZONES && !this.corazonesRotos) {
+			notificar(EventosCorazones.CORAZONES_ROTOS);
+			this.corazonesRotos = true;
+		}
 	}
 
 	

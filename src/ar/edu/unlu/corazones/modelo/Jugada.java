@@ -43,12 +43,13 @@ public class Jugada {
 	//                       COMPORTAMIENTO
 	// *************************************************************
 	
-	public boolean tirarCartaEnMesa(int turnoProx, Carta cartaEnJuego, boolean puedeTirarOtraCarta, boolean corazonesRotos) {
+	public boolean tirarCartaEnMesa(int turnoProx, Carta cartaEnJuego, boolean corazonesRotos) {
 		boolean isCartaValida = true;
+		Jugador jugador = jugadores[turnoProx];
 		
 		/*Si es la primera carta, existes dos casos:
-		- El primero, que sea cualquier carta que no sea de corazones: Eso es valido
-		- El segundo, que sea una carta de corazones y quiera iniciar jugada sin que esten los corazones rotos: Eso es invalido*/
+		- El primero, que sea una carta de corazones y quiera iniciar jugada sin que esten los corazones rotos: Eso es invalido
+		- El segundo, que sea cualquier carta que no sea de corazones: Eso es valido*/
 		
 		if(primeraCarta()) {
 			
@@ -57,13 +58,20 @@ public class Jugada {
 			} else {
 				primeraCartaJugada = cartaEnJuego;
 			}
-		}
+		} 
 		
 		/*El en caso de que no se la primera carta, analizo si la carta que tiro es
 		del mismo palo de la que esta en la mesa, o si puede tirar otra carta de su mano*/
 		
-		else if ((puedeTirarOtraCarta) && (cartaEnJuego.getPalo() != primeraCartaJugada.getPalo())){
-			isCartaValida = false;
+			else {
+			
+				Palo paloInicial = getPrimeraCartaJugada().getPalo();
+				boolean tienePaloInicial = jugador.tieneCartasDelPalo(paloInicial);
+				
+				// Si tiene cartas del palo inicial, debe jugar una de ese palo
+		        if (tienePaloInicial && cartaEnJuego.getPalo() != paloInicial) {
+		            isCartaValida = false;
+		        }
 		}
 		
 		//Si es una carta valida, la mando a la mesa

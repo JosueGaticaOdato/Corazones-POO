@@ -26,11 +26,15 @@ public interface IVista {
 	
 	void perdedorJugada();
 	
+	void corazonesRotos();
+	
 	// *************************************************************
 	//                		 OBSERVER
 	// *************************************************************
 	
 	void setControlador(Controlador controlador);
+
+
 
 
 

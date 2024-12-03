@@ -36,6 +36,8 @@ public class VistaCarta extends JPanel {
         setLayout(new BorderLayout());
 		setCarta(carta);
 		actualizarVista();
+		
+		
 	}
 	
 	 // Constructor por defecto

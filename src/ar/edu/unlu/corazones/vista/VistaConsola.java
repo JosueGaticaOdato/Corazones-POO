@@ -262,10 +262,9 @@ public class VistaConsola implements IVista {
 		continuar();
 		combinacionRondaJugada();
 		turnoJugador();
-		/*
-		 if (this.controlador.isCorazonesRotos()) {
-			System.out.println("------------- ¡CORAZONES ROTOS! -------------"  + "\n");}
-		 */
+		if (this.controlador.isCorazonesRotos()) {
+			System.out.println("*     ¡CORAZONES ROTOS!    *");
+		}
 		manoJugador();
 		System.out.print("Elija una carta: ");
 		int posCarta = entrada.nextInt();
@@ -289,7 +288,9 @@ public class VistaConsola implements IVista {
 	@Override
 	public void cartaTiradaInvalida() {
 		// TODO Auto-generated method stub
-		System.out.println("La carta que seleccioanste es invalida. Por favor, intentalo denuevo.");
+		System.out.println("La carta que seleccioanste es invalida."
+				+ "Tienes que tirar una carta del mismo palo que la que esta en la mesa."
+				+ "Por favor, intentalo denuevo.");
 		continuar();
 		pedirCarta();
 	}
@@ -313,6 +314,15 @@ public class VistaConsola implements IVista {
 		
 		continuar();
 	}
+	
+	// ******************** CORAZONES ROTOS ************************
+	
+	@Override
+	public void corazonesRotos() {
+		System.out.println("\n" + "CORAZONES ROTOS");
+		System.out.println("A partir de ahora se pueden tirar corazones al inicio" + "\n");
+		continuar();
+	}
 
 	
 	
@@ -330,5 +340,7 @@ public class VistaConsola implements IVista {
 	public void cartasRepartidas() {
 		// TODO Auto-generated method stub
 	}
+
+
 	
 }

@@ -98,6 +98,13 @@ public class Controlador implements Observador {
 	public int[] puntajesJugadores() {
 		return this.modelo.puntajesJugadores();
 	}
+	
+
+	public boolean isCorazonesRotos() {
+		// TODO Auto-generated method stub
+		return this.modelo.isCorazonesRotos();
+	}
+
 
 	
 	// *************************************************************
@@ -126,6 +133,9 @@ public class Controlador implements Observador {
 				break;
 			case PERDEDOR_JUGADA:
 				this.vista.perdedorJugada();
+				break;
+			case CORAZONES_ROTOS:
+				this.vista.corazonesRotos();
 				break;
 			}
 		}
