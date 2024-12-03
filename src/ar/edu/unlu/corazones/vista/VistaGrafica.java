@@ -6,11 +6,13 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -19,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
 
 import ar.edu.unlu.corazones.controlador.Controlador;
 import ar.edu.unlu.corazones.modelo.Carta;
@@ -284,9 +287,9 @@ public class VistaGrafica extends JFrame implements IVista{
         panelOeste = crearPanelJugador(this.controlador.listaJugadores()[3]);
         
         // Panel central para cartas jugadas
-        panelCentro = new JPanel();
-        panelCentro.setOpaque(false);
-        panelCentro.setLayout(new GridLayout(2, 2, 10, 10)); // Espacio para las cartas  
+        panelCentro = crearPanelCentro();
+        //panelCentro.setOpaque(false);
+        //panelCentro.setLayout(new GridLayout(2, 2, 10, 10)); // Espacio para las cartas  
         
         panelJuego.add(panelNorte, BorderLayout.NORTH);
         panelJuego.add(panelSur, BorderLayout.SOUTH);
@@ -297,15 +300,58 @@ public class VistaGrafica extends JFrame implements IVista{
         panelPrincipal.add(panelJuego, "juego");
 	}
 	
+	private JPanel crearPanelCentro() {
+
+	    JPanel panel = new JPanel();
+	    panel.setOpaque(false);
+	    panel.setLayout(new GridBagLayout());
+
+	    // GridBagConstraints es usado para controlar la posición de los componentes en la grilla
+	    GridBagConstraints gbc = new GridBagConstraints();
+	    gbc.gridx = 0; // Columna 0 (posición horizontal)
+	    gbc.gridy = 0; // Fila 0 (posición vertical)
+	    gbc.weightx = 1.0; // Indica que las celdas horizontales deberían expandirse si es necesario
+	    gbc.weighty = 1.0; // Indica que las celdas verticales deberían expandirse si es necesario
+	    gbc.anchor = GridBagConstraints.CENTER; // Posiciona los componentes en el centro de cada celda
+
+	    // Crea las vistas sin cartas, quedan en blanco
+	    VistaCarta cartaNorte = new VistaCarta();
+	    VistaCarta cartaSur = new VistaCarta();
+	    VistaCarta cartaEste = new VistaCarta();
+	    VistaCarta cartaOeste = new VistaCarta();
+
+
+	    /*NORTE*/
+	    gbc.gridx = 0;
+	    gbc.gridy = 1;
+	    panel.add(cartaNorte, gbc);
+
+	    /*ESTE*/
+	    gbc.gridx = 1;
+	    gbc.gridy = 0;
+	    panel.add(cartaEste, gbc);
+
+	    /*OESTE*/
+	    gbc.gridx = 2;
+	    gbc.gridy = 1;
+	    panel.add(cartaOeste, gbc);
+
+	    /*SUR*/
+	    gbc.gridx = 1;
+	    gbc.gridy = 2;
+	    panel.add(cartaSur, gbc);
+
+	    return panel;
+	}
+	
 	private JPanel crearPanelJugador(String nombreJugador) {
 	    JPanel panel = new JPanel(new BorderLayout());
 	    panel.setOpaque(false);
 	    panel.setPreferredSize(new Dimension(150, 200));
-	    
-	    //Etiqueta que tiene el nombre del jugador 
-	    JLabel etiqueta = new JLabel(nombreJugador, SwingConstants.CENTER);
-	    etiqueta.setForeground(Color.WHITE);
-	    panel.add(etiqueta, BorderLayout.NORTH);
+	    panel.setBorder(BorderFactory.createTitledBorder(
+	    	    BorderFactory.createLineBorder(Color.WHITE, 2),
+	    	    nombreJugador, TitledBorder.CENTER, TitledBorder.TOP, 
+	    	    new Font("Tahoma", Font.BOLD, 14), Color.WHITE));
 	    
 	    // Contenedor para las cartas
 	    JPanel contenedorCartas = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -383,6 +429,30 @@ public class VistaGrafica extends JFrame implements IVista{
 	@Override
 	public void setControlador(Controlador controlador) {
 		this.controlador = controlador;
+	}
+
+	@Override
+	public void jugarDosDeTrebol() {
+		// TODO Auto-generated method stub
+		System.out.println("Jugar dos de trebol");
+	}
+
+	@Override
+	public void cartaTiradaInvalida() {
+		// TODO Auto-generated method stub
+		System.out.println("Carta tirada invalida");
+	}
+
+	@Override
+	public void cartaTiradaInvalida2deTrebol() {
+		// TODO Auto-generated method stub
+		System.out.println("cartaTiradaInvalida2deTrebol");
+	}
+
+	@Override
+	public void perdedorJugada() {
+		// TODO Auto-generated method stub
+		System.out.println("perdedorJugada");
 	}
 
 

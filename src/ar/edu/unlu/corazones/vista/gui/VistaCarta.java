@@ -37,6 +37,13 @@ public class VistaCarta extends JPanel {
 		setCarta(carta);
 		actualizarVista();
 	}
+	
+	 // Constructor por defecto
+    public VistaCarta() {
+        setBackground(Color.WHITE);
+        setPreferredSize(new Dimension(ANCHO, ALTO)); // Tamaño fijo de la carta
+        setLayout(new BorderLayout());
+    }
 
 	// *************************************************************
 	//                       COMPORTAMIENTO
