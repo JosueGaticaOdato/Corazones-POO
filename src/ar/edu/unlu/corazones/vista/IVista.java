@@ -28,11 +28,15 @@ public interface IVista {
 	
 	void corazonesRotos();
 	
+	void cartaTiradaValida();
+	
 	// *************************************************************
 	//                		 OBSERVER
 	// *************************************************************
 	
 	void setControlador(Controlador controlador);
+
+	
 
 
 

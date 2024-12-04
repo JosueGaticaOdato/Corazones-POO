@@ -104,6 +104,11 @@ public class Controlador implements Observador {
 		// TODO Auto-generated method stub
 		return this.modelo.isCorazonesRotos();
 	}
+	
+	public Carta getCartaAJugar() {
+		return this.modelo.getCartaAJugar();
+	}
+
 
 
 	
@@ -137,10 +142,12 @@ public class Controlador implements Observador {
 			case CORAZONES_ROTOS:
 				this.vista.corazonesRotos();
 				break;
+			case CARTA_TIRADA_VALIDA:
+				this.vista.cartaTiradaValida();
+				break;
 			}
 		}
 	}
-
 
 
 

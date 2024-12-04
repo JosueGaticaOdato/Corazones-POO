@@ -154,11 +154,12 @@ public class Corazones implements Observable {
 				//Hasta que no tire el dos de trebol no arranca el juego!
 				while ( !dosDeTrebolTirado ) {
 					
-					if (jugada.tirarDosDeTrebol(cartaAJugar, turno)) {
+					if (jugada.tirarDosDeTrebol(cartaAJugar, turno) && (cartaAJugar != null)) {
 						
 						jugadores[turno].tirarCarta(jugadores[turno].buscarCarta(cartaAJugar));
 						turno = (turno + 1) % cantJugadores;
 						dosDeTrebolTirado = true;
+						notificar(EventosCorazones.CARTA_TIRADA_VALIDA);
 						
 					} else {
 						
@@ -179,11 +180,12 @@ public class Corazones implements Observable {
 		boolean cartaTiradaValida = false;
 		while ( !cartaTiradaValida ) {
 			
-			if (jugada.tirarCartaEnMesa(turno, cartaAJugar, this.corazonesRotos)) {
+			if (jugada.tirarCartaEnMesa(turno, cartaAJugar, this.corazonesRotos) && (cartaAJugar != null)) {
 				jugadores[turno].tirarCarta(jugadores[turno].buscarCarta(cartaAJugar));
 				tiroCorazones();
 				turno = (turno + 1) % cantJugadores;
 				cartaTiradaValida = true;
+				notificar(EventosCorazones.CARTA_TIRADA_VALIDA);
 				
 			} else {
 				

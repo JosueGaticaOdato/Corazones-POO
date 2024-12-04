@@ -266,8 +266,15 @@ public class VistaConsola implements IVista {
 			System.out.println("*     ¡CORAZONES ROTOS!    *");
 		}
 		manoJugador();
+		int posCarta;
 		System.out.print("Elija una carta: ");
-		int posCarta = entrada.nextInt();
+		
+		try {
+			posCarta = entrada.nextInt();
+		} catch (Exception e) {
+			posCarta = -1;
+		}
+		
 		controlador.cartaJugada(posCarta - 1); //Paso la carta
 		continuar();
 	}
@@ -335,10 +342,22 @@ public class VistaConsola implements IVista {
 		// TODO Auto-generated method stub
 		this.controlador = controlador;
 	}
+	
+	
+	// *************************************************************
+	//            METODOS SIN UTILIZAR POR EL MOMENTO
+	// *************************************************************
+
 
 	@Override
 	public void cartasRepartidas() {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void cartaTiradaValida() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

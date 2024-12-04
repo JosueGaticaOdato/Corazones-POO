@@ -104,7 +104,12 @@ public class Jugador {
 	}
 	
 	public Carta obtenerCartaJugador(int posCarta) {
-		return mano.get(posCarta);
+		try {
+			return mano.get(posCarta);			
+		} catch (Exception e) {
+			return null;
+		}
+			
 	}
 	
 	public int cantCartasMano() {

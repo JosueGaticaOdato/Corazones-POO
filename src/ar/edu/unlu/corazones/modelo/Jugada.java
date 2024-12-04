@@ -51,27 +51,31 @@ public class Jugada {
 		- El primero, que sea una carta de corazones y quiera iniciar jugada sin que esten los corazones rotos: Eso es invalido
 		- El segundo, que sea cualquier carta que no sea de corazones: Eso es valido*/
 		
-		if(primeraCarta()) {
-			
-			if (cartaEnJuego.getPalo() == Palo.CORAZONES && !corazonesRotos) {
-				isCartaValida = false;
-			} else {
-				primeraCartaJugada = cartaEnJuego;
-			}
-		} 
-		
-		/*El en caso de que no se la primera carta, analizo si la carta que tiro es
-		del mismo palo de la que esta en la mesa, o si puede tirar otra carta de su mano*/
-		
-			else {
-			
-				Palo paloInicial = getPrimeraCartaJugada().getPalo();
-				boolean tienePaloInicial = jugador.tieneCartasDelPalo(paloInicial);
+		try {
+			if(primeraCarta()) {
 				
-				// Si tiene cartas del palo inicial, debe jugar una de ese palo
-		        if (tienePaloInicial && cartaEnJuego.getPalo() != paloInicial) {
-		            isCartaValida = false;
-		        }
+				if (cartaEnJuego.getPalo() == Palo.CORAZONES && !corazonesRotos) {
+					isCartaValida = false;
+				} else {
+					primeraCartaJugada = cartaEnJuego;
+				}
+			} 
+			
+			/*El en caso de que no se la primera carta, analizo si la carta que tiro es
+			del mismo palo de la que esta en la mesa, o si puede tirar otra carta de su mano*/
+			
+				else {
+				
+					Palo paloInicial = getPrimeraCartaJugada().getPalo();
+					boolean tienePaloInicial = jugador.tieneCartasDelPalo(paloInicial);
+					
+					// Si tiene cartas del palo inicial, debe jugar una de ese palo
+			        if (tienePaloInicial && cartaEnJuego.getPalo() != paloInicial) {
+			            isCartaValida = false;
+			        }
+				}
+		} catch (Exception e) {
+			isCartaValida = false;
 		}
 		
 		//Si es una carta valida, la mando a la mesa
@@ -84,10 +88,14 @@ public class Jugada {
 	
 	public boolean tirarDosDeTrebol(Carta carta, int turno) {
 		boolean dosDeTrebol = false;
-		if (carta.getPalo() == Palo.TREBOL && carta.getValor() == 2) {
-			dosDeTrebol = true;
-			this.cartasJugadas[turno] = carta;
-			primeraCartaJugada = carta;
+		try {
+			if (carta.getPalo() == Palo.TREBOL && carta.getValor() == 2) {
+				dosDeTrebol = true;
+				this.cartasJugadas[turno] = carta;
+				primeraCartaJugada = carta;
+			}
+		} catch (Exception e){
+			
 		}
 		return dosDeTrebol;
 	}

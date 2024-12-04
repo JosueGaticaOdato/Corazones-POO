@@ -4,14 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -387,6 +384,10 @@ public class VistaGrafica extends JFrame implements IVista{
                 "Error", JOptionPane.ERROR_MESSAGE);
 	}
 	
+	public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
+	}
+	
 	// ****************** CARTAS REPARTIDAS ************************
 	
 	@Override
@@ -445,13 +446,15 @@ public class VistaGrafica extends JFrame implements IVista{
 		
 		String mensaje = "Es el turno del jugador " +  jugadorActual;
 		
+		mostrarMensaje(mensaje);
+		
 		int indiceCarta = mostrarSeleccionCarta(mensaje);
 		
 		if (indiceCarta >= 0) {
 			System.out.println(indiceCarta);
 	        controlador.cartaJugada(indiceCarta);
 	    } else {
-	        mostrarMensajeCentro("Selección inválida. Intente nuevamente.");
+	    	mostrarMensajeError("Selección inválida. Intente nuevamente.");
 	        pedirCarta(); // Volver a pedir si el índice no es válido
 	    }
 	}
@@ -529,6 +532,12 @@ public class VistaGrafica extends JFrame implements IVista{
 	public void corazonesRotos() {
 		// TODO Auto-generated method stub
 		System.out.println("Corazones rotos!");
+	}
+
+	@Override
+	public void cartaTiradaValida() {
+		// TODO Auto-generated method stub
+		
 	}
 
 
