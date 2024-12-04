@@ -1,0 +1,209 @@
+	private void mostrarCartasJugador(String nombreJugador, ArrayList<Carta> cartas) {
+		JPanel contenedorCartas = obtenerContenedorCartas(nombreJugador);
+		
+		int i = 0;
+		for (Carta carta: cartas) {
+			VistaCarta vistaCarta = new VistaCarta(carta);
+			agregarInteractividadCarta(vistaCarta, i);
+			contenedorCartas.add(vistaCarta);
+			i++;
+		}
+		
+		// Refrescar la vista
+		System.out.println("Mostrar cartas Jugador");
+        contenedorCartas.revalidate();
+        contenedorCartas.repaint();
+	}
+	
+	private JPanel obtenerContenedorCartas(String nombreJugador) {
+	    JPanel[] panelesJugadores = { panelSur, panelNorte, panelEste, panelOeste };
+	    
+	    
+	    System.out.println("obtenerContenedorCartas");
+	    for (JPanel panelJugador : panelesJugadores) {
+	        for (Component componente : panelJugador.getComponents()) {
+	            if (componente instanceof JPanel) {
+	                JPanel contenedorCartas = (JPanel) componente;
+	                if (nombreJugador.equals(contenedorCartas.getName())) {
+	                    return contenedorCartas;
+	                }
+	            }
+	        }
+	    }
+	    
+	    
+	    
+	    return null; // No se encontró el contenedor
+    }
+	
+	private void agregarInteractividadCarta(VistaCarta carta, int posicionCarta) {
+		System.out.println("agregarInteractividadCarta");
+	    carta.addMouseListener(new MouseAdapter() {
+	        @Override
+	        public void mouseClicked(MouseEvent e) {
+	            if (carta.isEnabled()) { // Solo permite seleccionar si está habilitada
+	            	posCartaSeleccionada = posicionCarta;
+	            	cartaSeleccionada = true;
+	                moverCartaAlCentro(carta); // Mover la carta al centro del tablero
+	                deshabilitarCartas(); // Deshabilitar todas las cartas
+	            }
+	        }
+	    });
+	}
+
+	
+	// ********************** PEDIR CARTA ***************************
+	
+	private boolean cartaSeleccionada = false;
+	private int posCartaSeleccionada; 
+	
+	@Override
+	public void pedirCarta() {
+		
+		String jugadorActual = controlador.nombreJugadorActual();
+		
+		actualizarTextoCentro("Es el turno del jugador: "
+		+ jugadorActual);
+		
+		habilitarInterracionCarta(jugadorActual);
+		
+		//esperarSeleccionDeCarta();
+	}
+	
+	private void habilitarInterracionCarta(String jugadorActual) {
+		for (String jugador : this.controlador.listaJugadores()) {
+			JPanel panelJugador = obtenerPanelJugador(jugador);
+			
+			if (jugador.equals(jugadorActual)) {
+				panelJugador.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3)); // Resaltar panel
+	            habilitarCartas(panelJugador, true); // Habilitar interactividad en sus cartas
+			} else {
+	            panelJugador.setBorder(null); // Quitar resaltado de los demás jugadores
+	            habilitarCartas(panelJugador, false); // Deshabilitar interactividad en cartas de otros jugadores
+	        }
+		}
+
+	}
+	
+	private JPanel obtenerPanelJugador(String jugador) {
+		
+		if (panelNorte.getName() == jugador) {
+			return panelNorte;
+		} else if (panelSur.getName() == jugador) {
+			return panelSur;
+		} else if (panelEste.getName() == jugador) {
+			return panelEste;
+		} else if (panelOeste.getName() == jugador) {
+			return panelOeste;
+		} else
+			return null;
+	}
+	
+	private void habilitarCartas(JPanel panelJugador, boolean habilitar) {
+	    Component[] componentes = panelJugador.getComponents();
+	    
+	    for (Component componente : componentes) {
+	        if (componente instanceof VistaCarta) {
+	            VistaCarta carta = (VistaCarta) componente;
+	            carta.setEnabled(habilitar); // Deshabilitar interactividad visual
+	        }
+	    }
+	}
+	
+	private void moverCartaAlCentro(VistaCarta carta) {
+	    panelCentro.add(carta);
+	    panelCentro.revalidate();
+	    panelCentro.repaint();
+	}
+	
+	private void deshabilitarCartas() {
+	    for (String jugador : controlador.listaJugadores()) {
+	        JPanel panelJugador = obtenerPanelJugador(jugador);
+	        habilitarCartas(panelJugador, false);
+	    }
+	}
+
+	private void esperarSeleccionDeCarta() {
+	    // Bloquear el flujo esperando que el jugador seleccione una carta
+	    while (!cartaSeleccionada) {
+	        try {
+	            Thread.sleep(100); // Agregar un pequeño retraso para evitar el uso excesivo de CPU
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    
+	    // Una vez que se selecciona la carta, continuar con el flujo
+	    controlador.cartaJugada(posCartaSeleccionada);  // Enviar la carta seleccionada al controlador
+	}
+	
+	// ******************** JUGAR DOS DE TREBOL ********************
+	
+	@Override
+	public void jugarDosDeTrebol() {
+		
+		System.out.println("Jugar dos de trebol");
+		
+		String texto = "El jugador: " +  controlador.nombreJugadorActual() + " tiene que comenzar ya que tiene el 2 de trebol.";
+		
+		JOptionPane.showMessageDialog(this, texto, 
+                "Juego iniciado", JOptionPane.INFORMATION_MESSAGE);
+		
+		pedirCarta();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	private void habilitarCartasJugador(String jugadorActual) {
+
+		JPanel contenedorCartas = obtenerContenedorCartas(jugadorActual);
+		
+		for (int i = 0; i < contenedorCartas.getComponents().length; i++) {
+			VistaCarta carta = (VistaCarta) contenedorCartas.getComponent(i);
+		
+			//Habilito la carta y agrego el listener
+			carta.setEnabled(true);
+	        carta.addMouseListener(new MouseAdapter() {
+	            @Override
+	            public void mouseClicked(MouseEvent e) {
+	                cartaSeleccionada(i); // Seleccion de carta
+	            }
+	        });
+		}
+		
+		System.out.println("HabilitarCartasJugador");
+	}
+	
+	private void cartaSeleccionada(int posCarta) {
+		
+	    // Deshabilitar todas las cartas del jugador para evitar más interacciones
+	    //deshabilitarCartasJugadorActual();
+
+	    // Mover la carta al centro del tablero
+	    //moverCartaAlCentro(carta);
+		
+		System.out.println("Carta jugada en la posicion " + posCarta);
+
+	    // Notificar al controlador que esta carta fue jugada
+	    controlador.cartaJugada(posCarta);
+	}
+	
+	

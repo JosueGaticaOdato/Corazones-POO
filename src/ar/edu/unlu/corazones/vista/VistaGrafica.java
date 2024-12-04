@@ -4,11 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -20,7 +23,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
 import ar.edu.unlu.corazones.controlador.Controlador;
@@ -45,11 +47,13 @@ public class VistaGrafica extends JFrame implements IVista{
 	private JPanel panelMenu;
 	
 	private JPanel panelJuego;
+	private JPanel panelCentro;
+	private JLabel labelCentro;
+	
 	private JPanel panelNorte;
 	private JPanel panelSur;
 	private JPanel panelEste;
-	private JPanel panelOeste;
-	private JPanel panelCentro;
+	private JPanel panelOeste; 
 
 	
 	// *************************************************************
@@ -282,14 +286,12 @@ public class VistaGrafica extends JFrame implements IVista{
 		
 		//Paneles para cada jugador
 		panelSur = crearPanelJugador(this.controlador.listaJugadores()[0]);
-        panelNorte = crearPanelJugador(this.controlador.listaJugadores()[1]);
-        panelEste = crearPanelJugador(this.controlador.listaJugadores()[2]);
-        panelOeste = crearPanelJugador(this.controlador.listaJugadores()[3]);
+		panelOeste = crearPanelJugador(this.controlador.listaJugadores()[1]);
+		panelNorte = crearPanelJugador(this.controlador.listaJugadores()[2]);
+        panelEste = crearPanelJugador(this.controlador.listaJugadores()[3]);
         
         // Panel central para cartas jugadas
-        panelCentro = crearPanelCentro();
-        //panelCentro.setOpaque(false);
-        //panelCentro.setLayout(new GridLayout(2, 2, 10, 10)); // Espacio para las cartas  
+        panelCentro = crearPanelCentro(); 
         
         panelJuego.add(panelNorte, BorderLayout.NORTH);
         panelJuego.add(panelSur, BorderLayout.SOUTH);
@@ -319,7 +321,10 @@ public class VistaGrafica extends JFrame implements IVista{
 	    VistaCarta cartaSur = new VistaCarta();
 	    VistaCarta cartaEste = new VistaCarta();
 	    VistaCarta cartaOeste = new VistaCarta();
-
+	    
+	    labelCentro = new JLabel("Centro");
+	    labelCentro.setFont(new Font("Arial", Font.BOLD, 16)); // Cambiar tamaño y estilo de letra
+	    labelCentro.setForeground(Color.BLUE); // Cambiar color del texto
 
 	    /*NORTE*/
 	    gbc.gridx = 0;
@@ -340,6 +345,11 @@ public class VistaGrafica extends JFrame implements IVista{
 	    gbc.gridx = 1;
 	    gbc.gridy = 2;
 	    panel.add(cartaSur, gbc);
+	    
+	    /*CENTRO*/
+	    gbc.gridx = 1;
+	    gbc.gridy = 1;
+	    panel.add(labelCentro, gbc);
 
 	    return panel;
 	}
@@ -352,6 +362,7 @@ public class VistaGrafica extends JFrame implements IVista{
 	    	    BorderFactory.createLineBorder(Color.WHITE, 2),
 	    	    nombreJugador, TitledBorder.CENTER, TitledBorder.TOP, 
 	    	    new Font("Tahoma", Font.BOLD, 14), Color.WHITE));
+	    panel.setName(nombreJugador);
 	    
 	    // Contenedor para las cartas
 	    JPanel contenedorCartas = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -365,7 +376,17 @@ public class VistaGrafica extends JFrame implements IVista{
 	    return panel;
 	}
 	
-
+	public void mostrarMensajeCentro(String mensaje) {
+	    labelCentro.setText(mensaje);
+	    labelCentro.revalidate();
+	    labelCentro.repaint();
+	}
+	
+	public void mostrarMensajeError(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, 
+                "Error", JOptionPane.ERROR_MESSAGE);
+	}
+	
 	// ****************** CARTAS REPARTIDAS ************************
 	
 	@Override
@@ -419,12 +440,85 @@ public class VistaGrafica extends JFrame implements IVista{
 	public void pedirCarta() {
 		// TODO Auto-generated method stub
 		System.out.println("Pedir cartas");
+		
+		String jugadorActual = this.controlador.nombreJugadorActual();
+		
+		String mensaje = "Es el turno del jugador " +  jugadorActual;
+		
+		int indiceCarta = mostrarSeleccionCarta(mensaje);
+		
+		if (indiceCarta >= 0) {
+			System.out.println(indiceCarta);
+	        controlador.cartaJugada(indiceCarta);
+	    } else {
+	        mostrarMensajeCentro("Selección inválida. Intente nuevamente.");
+	        pedirCarta(); // Volver a pedir si el índice no es válido
+	    }
+	}
+	
+	private int mostrarSeleccionCarta(String text) {
+	    String entrada = JOptionPane.showInputDialog(
+	            this, 
+	            "Ingrese el número de la carta que desea jugar (1 a X):", 
+	            text, 
+	            JOptionPane.QUESTION_MESSAGE
+	        );
+
+	    System.out.println(entrada);
+	        try {
+	            int seleccion = Integer.parseInt(entrada);
+	            return seleccion - 1;
+	        } catch (NumberFormatException e) {
+	            return -1;
+	        }
 	}
 
+	// ******************** JUGAR DOS DE TREBOL ********************
+
+	@Override
+	public void jugarDosDeTrebol() {
+		System.out.println("Jugar dos de trebol");
+		
+		String jugadorActual = this.controlador.nombreJugadorActual();
+		
+		 JOptionPane.showMessageDialog(this, "Comienza la ronda el jugador " +  jugadorActual
+					+ " ya que tiene el 2 de trebol", 
+                 "Comienzo de ronda", JOptionPane.INFORMATION_MESSAGE);
+		
+		pedirCarta();
+	}
+	
+	// ****************** CARTA TIRADA INVALIDA ********************
+	
+	@Override
+	public void cartaTiradaInvalida() {
+		mostrarMensajeError("La carta que seleccioanste es invalida."
+				+ "Tienes que tirar una carta del mismo palo que la que esta en la mesa."
+				+ "Por favor, intentalo denuevo.");
+		pedirCarta();
+	}
+	
+	@Override
+	public void cartaTiradaInvalida2deTrebol() {
+		mostrarMensajeError("La carta que seleccioanste es invalida. "
+				+ "Para comenzar el juego si o si tienes que tirar "
+				+ "el 2 de Trebol. Por favor, intentalo denuevo.");
+		pedirCarta();
+	}
+	
+	// ******************** PERDEDOR JUGADA ************************
+	
+	@Override
+	public void perdedorJugada() {
+		
+		mostrarMensajeError("El perdedor de esta jugada es "
+				+ this.controlador.jugadorPerdedorJugada() + "\n");
+	}
 	
 	// *************************************************************
 	//                		 OBSERVER
 	// *************************************************************
+
 
 	@Override
 	public void setControlador(Controlador controlador) {
@@ -432,27 +526,9 @@ public class VistaGrafica extends JFrame implements IVista{
 	}
 
 	@Override
-	public void jugarDosDeTrebol() {
+	public void corazonesRotos() {
 		// TODO Auto-generated method stub
-		System.out.println("Jugar dos de trebol");
-	}
-
-	@Override
-	public void cartaTiradaInvalida() {
-		// TODO Auto-generated method stub
-		System.out.println("Carta tirada invalida");
-	}
-
-	@Override
-	public void cartaTiradaInvalida2deTrebol() {
-		// TODO Auto-generated method stub
-		System.out.println("cartaTiradaInvalida2deTrebol");
-	}
-
-	@Override
-	public void perdedorJugada() {
-		// TODO Auto-generated method stub
-		System.out.println("perdedorJugada");
+		System.out.println("Corazones rotos!");
 	}
 
 
