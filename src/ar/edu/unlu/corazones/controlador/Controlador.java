@@ -108,6 +108,10 @@ public class Controlador implements Observador {
 	public Carta getCartaAJugar() {
 		return this.modelo.getCartaAJugar();
 	}
+	
+	public String ganadorJuego() {
+		return this.modelo.getNombreGanadorJuego();
+	}
 
 
 
@@ -145,9 +149,17 @@ public class Controlador implements Observador {
 			case CARTA_TIRADA_VALIDA:
 				this.vista.cartaTiradaValida();
 				break;
+			case FIN_DE_RONDA:
+				this.vista.finDeRonda();
+				break;
+			case 	FIN_DE_JUEGO:
+				this.vista.finDeJuego();
+				break;
 			}
 		}
 	}
+
+
 
 
 

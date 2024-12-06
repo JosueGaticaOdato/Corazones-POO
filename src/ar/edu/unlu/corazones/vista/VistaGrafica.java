@@ -666,6 +666,43 @@ public class VistaGrafica extends JFrame implements IVista{
 	}
 	
 	// *************************************************************
+	//              		   PUNTAJE
+	// *************************************************************
+	
+	private String puntaje() {
+		String s = "*          PUNTAJE         *" + "\n";
+		s  += "\n";
+		int[] puntajes = this.controlador.puntajesJugadores();
+		for (int i = 0; i < puntajes.length; i++) {
+			s += (i+1) + ") " + this.controlador.getJugador(i) + 
+					" -> " + puntajes[i];
+		}
+		s  += "\n";
+		s += "****************************" + "\n";
+		return s;
+	}
+	
+	// *************************************************************
+	//              		 FIN DE JUEGO
+	// *************************************************************
+	
+	@Override
+	public void finDeRonda() {
+		mostrarMensaje("FIN DE LA RONDA");
+		mostrarMensaje("Asi estan los puntajes hasta el momento" + "\n" + puntaje());
+	}
+	
+	// *************************************************************
+	//              		 FIN DE JUEGO
+	// *************************************************************
+
+	@Override
+	public void finDeJuego() {
+		mostrarMensaje("FIN DEL JUEGO");
+		mostrarMensaje(puntaje() + "\n" + "El ganador fue " + this.controlador.ganadorJuego() + "\n" + "¡¡¡FELICIDADES!!!");
+	}
+	
+	// *************************************************************
 	//                		 OBSERVER
 	// *************************************************************
 
@@ -680,6 +717,8 @@ public class VistaGrafica extends JFrame implements IVista{
 		// TODO Auto-generated method stub
 		System.out.println("Corazones rotos!");
 	}
+
+
 
 
 }

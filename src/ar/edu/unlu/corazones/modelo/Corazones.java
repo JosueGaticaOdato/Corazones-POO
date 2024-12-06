@@ -41,7 +41,7 @@ public class Corazones implements Observable {
 	
 	private Carta cartaAJugar;
 	
-	private int posJugadorGanador;
+	private Jugador jugadorGanador;
 	
 	private boolean corazonesRotos;
 	
@@ -107,9 +107,13 @@ public class Corazones implements Observable {
 			if (puntajeMaximoActual() >= puntajeMaximo) {
 				juegoTerminado = true;
 			}
-			
+			notificar(EventosCorazones.FIN_DE_RONDA);
+			Jugada.reiniciarContadorJugadas();
+			ronda++;
 		}
-		System.out.println("Fin Juego!");
+		
+		determinarGanador();
+		notificar(EventosCorazones.FIN_DE_JUEGO);
 	}
 	
 	// *************************************************************
@@ -132,6 +136,16 @@ public class Corazones implements Observable {
 			}
 		}
 		return max;
+	}
+	
+	private void determinarGanador() {
+		int minPuntaje = 100;
+		for (int i = 0; i < cantJugadores; i++) {
+			if (minPuntaje >= jugadores[i].getPuntaje()) {
+				minPuntaje = jugadores[i].getPuntaje();
+				this.jugadorGanador = jugadores[i];
+			}
+		}
 	}
 	
 	// *************************************************************
@@ -266,10 +280,6 @@ public class Corazones implements Observable {
 		return cartaAJugar;
 	}
 
-	public int getPosJugadorGanador() {
-		return posJugadorGanador;
-	}
-
 	public boolean isCorazonesRotos() {
 		return corazonesRotos;
 	}
@@ -344,6 +354,10 @@ public class Corazones implements Observable {
 			puntajes[i] = this.jugadores[i].getPuntaje();
 		}
 		return puntajes;
+	}
+	
+	public String getNombreGanadorJuego() {
+		return this.jugadorGanador.getNombre();
 	}
 	
 	// *************************************************************

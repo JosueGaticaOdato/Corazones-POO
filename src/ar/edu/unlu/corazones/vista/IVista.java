@@ -31,10 +31,20 @@ public interface IVista {
 	void cartaTiradaValida();
 	
 	// *************************************************************
+	//                    FIN JUEGO - RONDA
+	// *************************************************************
+	
+	void finDeRonda();
+
+	void finDeJuego();
+	
+	// *************************************************************
 	//                		 OBSERVER
 	// *************************************************************
 	
 	void setControlador(Controlador controlador);
+
+
 
 	
 

@@ -251,6 +251,10 @@ public class VistaConsola implements IVista {
 		}
 	}
 	
+	// ******************** PASAJE DE CARTAS ***********************
+	
+	
+	
 	// ************ PEDIR CARTAS (para tirar en mesa) **************
 	
 	@Override
@@ -331,6 +335,33 @@ public class VistaConsola implements IVista {
 		continuar();
 	}
 
+	// *************************************************************
+	//              		 FIN DE RONDA
+	// *************************************************************
+	
+	@Override
+	public void finDeRonda() { 
+		System.out.println("****************************");
+		System.out.println("* 	   FIN DE LA RONDA	   *");
+		System.out.println("****************************");
+		System.out.println("Asi estan los puntajes hasta el momento" + "\n");
+		puntaje();
+		continuar();
+	}
+	
+	// *************************************************************
+	//              		 FIN DE JUEGO
+	// *************************************************************
+	
+	@Override
+	public void finDeJuego() {
+		System.out.println("****************************");
+		System.out.println("*  		FIN DEL JUEGO      *");
+		System.out.println("****************************");
+		puntaje();
+		System.out.println("El ganador fue " + this.controlador.ganadorJuego());
+		System.out.println("¡¡¡FELICIDADES!!!");
+	}
 	
 	
 	// *************************************************************
@@ -347,7 +378,6 @@ public class VistaConsola implements IVista {
 	// *************************************************************
 	//            METODOS SIN UTILIZAR POR EL MOMENTO
 	// *************************************************************
-
 
 	@Override
 	public void cartasRepartidas() {
