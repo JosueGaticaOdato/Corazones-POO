@@ -207,3 +207,87 @@
 	}
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		@Override
+	public void cartaTiradaValida() {
+		
+	    // Crear la vista de la carta jugada
+		Carta cartaAJugar = this.controlador.getCartaAJugar();
+		String nombreJugador = this.controlador.nombreJugadorActual();
+		
+		removerCartaDeLaMano(nombreJugador, cartaAJugar);
+		
+		VistaCarta vistaCarta = new VistaCarta(cartaAJugar);
+		
+		//enviarCartaJugadaAlCentro(nombreJugador, vistaCarta);
+		
+	    // Obtener la posición del jugador en el panel central
+	    Point posicion = posicionesJugadores.get(nombreJugador);
+
+	    // Coordenadas para la carta
+	    GridBagConstraints gbc = new GridBagConstraints();
+	    gbc.gridx = (int) posicion.getX();
+	    gbc.gridy = (int) posicion.getY();
+	    gbc.anchor = GridBagConstraints.CENTER;
+	    
+	    // Eliminar cualquier componente existente en esa posición (si es necesario)
+	    for (Component comp : panelCentro.getComponents()) {
+	        GridBagConstraints constraints = ((GridBagLayout) panelCentro.getLayout()).getConstraints(comp);
+	        if (constraints.gridx == gbc.gridx && constraints.gridy == gbc.gridy) {
+	            panelCentro.remove(comp);
+	            break;
+	        }
+	    }
+
+	    // Agregar la carta jugada en la posición correspondiente
+	    panelCentro.add(vistaCarta, gbc);
+
+	    // Refrescar vista
+	    panelCentro.revalidate();
+	    panelCentro.repaint();
+	}
+	
+	private void removerCartaDeLaMano(String nombreJugador, Carta carta) {
+
+		JPanel contenedorCartas = obtenerContenedorCartas(nombreJugador);
+		
+	    // Iterar sobre los componentes del contenedor de cartas
+	    for (Component comp : contenedorCartas.getComponents()) {
+	        if (comp instanceof JPanel panelCarta) {
+	            // Buscar la VistaCarta dentro de este panel
+	            for (Component subComp : panelCarta.getComponents()) {
+	            	if (subComp instanceof VistaCarta vistaSubCarta) {
+	            		if(vistaSubCarta.getCarta().equals(carta)) {
+	            			
+	            			System.out.println("Chau carta");
+	            			contenedorCartas.remove(panelCarta);
+	            			return;
+	            			
+	            		}
+	            	}
+	            }
+	        }
+	    }
+	    
+	}
+	

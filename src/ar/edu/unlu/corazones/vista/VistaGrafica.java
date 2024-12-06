@@ -9,8 +9,12 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -20,6 +24,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
 import ar.edu.unlu.corazones.controlador.Controlador;
@@ -51,6 +56,8 @@ public class VistaGrafica extends JFrame implements IVista{
 	private JPanel panelSur;
 	private JPanel panelEste;
 	private JPanel panelOeste; 
+	
+	private Map<String, Point> posicionesJugadores = new HashMap<>();;
 
 	
 	// *************************************************************
@@ -81,6 +88,24 @@ public class VistaGrafica extends JFrame implements IVista{
         cardLayout.show(panelPrincipal, vista);
     }
     
+    // *************************************************************
+    //                    	   MENSAJES
+    // *************************************************************
+	
+	public void mostrarMensajeCentro(String mensaje) {
+	    labelCentro.setText(mensaje);
+	    labelCentro.revalidate();
+	    labelCentro.repaint();
+	}
+	
+	public void mostrarMensajeError(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, 
+                "Error", JOptionPane.ERROR_MESSAGE);
+	}
+	
+	public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
+	}
 
 	// *************************************************************
 	//                         PRE-JUEGO
@@ -281,11 +306,16 @@ public class VistaGrafica extends JFrame implements IVista{
 		panelJuego = new JPanel(new BorderLayout());
 		panelJuego.setOpaque(false); 
 		
+		String[] nombresJugadores = this.controlador.listaJugadores();
+		
 		//Paneles para cada jugador
-		panelSur = crearPanelJugador(this.controlador.listaJugadores()[0]);
-		panelOeste = crearPanelJugador(this.controlador.listaJugadores()[1]);
-		panelNorte = crearPanelJugador(this.controlador.listaJugadores()[2]);
-        panelEste = crearPanelJugador(this.controlador.listaJugadores()[3]);
+		panelSur = crearPanelJugador(nombresJugadores[0]);
+		panelOeste = crearPanelJugador(nombresJugadores[1]);
+		panelNorte = crearPanelJugador(nombresJugadores[2]);
+        panelEste = crearPanelJugador(nombresJugadores[3]);
+        
+    	// Inicializar posiciones dinámicamente
+        inicializarPosicionesJugadores(nombresJugadores);
         
         // Panel central para cartas jugadas
         panelCentro = crearPanelCentro(); 
@@ -324,33 +354,33 @@ public class VistaGrafica extends JFrame implements IVista{
 	    labelCentro.setForeground(Color.BLUE); // Cambiar color del texto
 
 	    /*NORTE*/
-	    gbc.gridx = 0;
-	    gbc.gridy = 1;
+	    gbc.gridx = 1;
+	    gbc.gridy = 2;
 	    panel.add(cartaNorte, gbc);
-
-	    /*ESTE*/
+	    
+	    /*SUR*/
 	    gbc.gridx = 1;
 	    gbc.gridy = 0;
+	    panel.add(cartaSur, gbc);
+
+	    /*ESTE*/
+	    gbc.gridx = 2;
+	    gbc.gridy = 1;
 	    panel.add(cartaEste, gbc);
 
 	    /*OESTE*/
-	    gbc.gridx = 2;
+	    gbc.gridx = 0;
 	    gbc.gridy = 1;
 	    panel.add(cartaOeste, gbc);
-
-	    /*SUR*/
-	    gbc.gridx = 1;
-	    gbc.gridy = 2;
-	    panel.add(cartaSur, gbc);
 	    
 	    /*CENTRO*/
 	    gbc.gridx = 1;
 	    gbc.gridy = 1;
 	    panel.add(labelCentro, gbc);
-
+	    
 	    return panel;
 	}
-	
+
 	private JPanel crearPanelJugador(String nombreJugador) {
 	    JPanel panel = new JPanel(new BorderLayout());
 	    panel.setOpaque(false);
@@ -371,22 +401,18 @@ public class VistaGrafica extends JFrame implements IVista{
 	    contenedorCartas.setName(nombreJugador);
 	    
 	    return panel;
-	}
+	}	
 	
-	public void mostrarMensajeCentro(String mensaje) {
-	    labelCentro.setText(mensaje);
-	    labelCentro.revalidate();
-	    labelCentro.repaint();
+	private void inicializarPosicionesJugadores(String[] nombresJugadores) {
+	    posicionesJugadores = new HashMap<>();
+
+	    // Asociar jugadores a posiciones en base al índice
+	    posicionesJugadores.put(nombresJugadores[0], new Point(1, 2)); // Sur
+	    posicionesJugadores.put(nombresJugadores[1], new Point(0, 1)); // Oeste
+	    posicionesJugadores.put(nombresJugadores[2], new Point(1, 0)); // Norte
+	    posicionesJugadores.put(nombresJugadores[3], new Point(2, 1)); // Este
 	}
-	
-	public void mostrarMensajeError(String mensaje) {
-        JOptionPane.showMessageDialog(this, mensaje, 
-                "Error", JOptionPane.ERROR_MESSAGE);
-	}
-	
-	public void mostrarMensaje(String mensaje) {
-        JOptionPane.showMessageDialog(this, mensaje);
-	}
+
 	
 	// ****************** CARTAS REPARTIDAS ************************
 	
@@ -406,14 +432,40 @@ public class VistaGrafica extends JFrame implements IVista{
 	}
 	
 	private void mostrarCartasJugador(String nombreJugador, ArrayList<Carta> cartas) {
-		JPanel contenedorCartas = obtenerContenedorCartas(nombreJugador);
 		
+	    JPanel contenedorCartas = obtenerContenedorCartas(nombreJugador);
+	    contenedorCartas.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
+	    contenedorCartas.removeAll();
+
+	    for (int i = 0; i < cartas.size(); i++) {
+	        Carta carta = cartas.get(i);
+	        VistaCarta vistaCarta = new VistaCarta(carta);
+
+	        // Panel vertical para la carta y su posición
+	        JPanel panelCarta = new JPanel();
+	        panelCarta.setLayout(new BorderLayout());
+	        panelCarta.setOpaque(false);
+
+	        // Añadir la carta
+	        panelCarta.add(vistaCarta, BorderLayout.CENTER);
+
+	        // Crear y añadir el JLabel con la posición
+	        JLabel labelPosicion = new JLabel(String.valueOf(i + 1));
+	        labelPosicion.setHorizontalAlignment(SwingConstants.CENTER); //Texto centrado
+	        labelPosicion.setFont(new Font("Arial", Font.PLAIN, 12));
+	        labelPosicion.setForeground(Color.WHITE);
+	        panelCarta.add(labelPosicion, BorderLayout.SOUTH);
+
+	        contenedorCartas.add(panelCarta);
+	    }
+	    
+	    /*
 		for (Carta carta: cartas) {
 			VistaCarta vistaCarta = new VistaCarta(carta);
 			contenedorCartas.add(vistaCarta);
-		}
+		}*/
 		
-		// Refrescar la vista
         contenedorCartas.revalidate();
         contenedorCartas.repaint();
 	}
@@ -491,6 +543,75 @@ public class VistaGrafica extends JFrame implements IVista{
 		pedirCarta();
 	}
 	
+	// ****************** CARTA TIRADA VALIDA **********************
+	
+	public void cartaTiradaValida() {
+		
+	    // Crear la vista de la carta jugada
+		Carta cartaAJugar = this.controlador.getCartaAJugar();
+		String nombreJugador = this.controlador.nombreJugadorActual();
+		VistaCarta vistaCarta = new VistaCarta(cartaAJugar);
+		
+		removerCartaDeLaMano(nombreJugador, cartaAJugar);
+		
+		enviarCartaJugadaAlCentro(nombreJugador, vistaCarta);
+	}
+	
+	private void removerCartaDeLaMano(String nombreJugador, Carta carta) {
+	    
+		JPanel contenedorCartas = obtenerContenedorCartas(nombreJugador);
+		
+	    // Iterar sobre los componentes del contenedor de cartas
+	    for (Component comp : contenedorCartas.getComponents()) {
+	        if (comp instanceof JPanel panelCarta) {
+	            // Buscar la VistaCarta dentro de este panel
+	            for (Component subComp : panelCarta.getComponents()) {
+	            	if (subComp instanceof VistaCarta vistaSubCarta) {
+	            		if(vistaSubCarta.getCarta().equals(carta)) {
+	            			
+	            			System.out.println("Chau carta");
+	            			contenedorCartas.remove(panelCarta);
+	            			return;
+	            			
+	            		}
+	            	}
+	            }
+	        }
+	    }
+	    
+	    // Refrescar la vista del contenedor
+	    contenedorCartas.revalidate();
+	    contenedorCartas.repaint();
+	    
+	}
+	
+	private void enviarCartaJugadaAlCentro(String nombreJugador, VistaCarta vistaCarta ) {
+	    // Obtener la posición del jugador en el panel central
+	    Point posicion = posicionesJugadores.get(nombreJugador);
+
+	    // Coordenadas para la carta
+	    GridBagConstraints gbc = new GridBagConstraints();
+	    gbc.gridx = (int) posicion.getX();
+	    gbc.gridy = (int) posicion.getY();
+	    gbc.anchor = GridBagConstraints.CENTER;
+	    
+	    // Eliminar cualquier componente existente en esa posición (si es necesario)
+	    for (Component comp : panelCentro.getComponents()) {
+	        GridBagConstraints constraints = ((GridBagLayout) panelCentro.getLayout()).getConstraints(comp);
+	        if (constraints.gridx == gbc.gridx && constraints.gridy == gbc.gridy) {
+	            panelCentro.remove(comp);
+	            break;
+	        }
+	    }
+
+	    // Agregar la carta jugada en la posición correspondiente
+	    panelCentro.add(vistaCarta, gbc);
+
+	    // Refrescar vista
+	    panelCentro.revalidate();
+	    panelCentro.repaint();
+	}
+	
 	// ****************** CARTA TIRADA INVALIDA ********************
 	
 	@Override
@@ -516,6 +637,32 @@ public class VistaGrafica extends JFrame implements IVista{
 		
 		mostrarMensajeError("El perdedor de esta jugada es "
 				+ this.controlador.jugadorPerdedorJugada() + "\n");
+		
+		limpiarCartasJugadas();
+	}
+	
+	private void limpiarCartasJugadas() {
+	    // Iterar sobre todos los componentes del panel central
+	    Component[] componentes = panelCentro.getComponents();
+
+	    // Eliminar todos los componentes que sean instancias de VistaCarta
+	    for (Component componente : componentes) {
+	        if (componente instanceof VistaCarta) {
+	        	
+	        	GridBagConstraints gbc = ((GridBagLayout) panelCentro.getLayout())
+	                    .getConstraints(componente);
+
+	            panelCentro.remove(componente);
+
+	            VistaCarta nuevaCarta = new VistaCarta();
+
+	            panelCentro.add(nuevaCarta, gbc);
+	        }
+	    }
+
+	    // Refrescar el panel central para que los cambios sean visibles
+	    panelCentro.revalidate();
+	    panelCentro.repaint();
 	}
 	
 	// *************************************************************
@@ -532,12 +679,6 @@ public class VistaGrafica extends JFrame implements IVista{
 	public void corazonesRotos() {
 		// TODO Auto-generated method stub
 		System.out.println("Corazones rotos!");
-	}
-
-	@Override
-	public void cartaTiradaValida() {
-		// TODO Auto-generated method stub
-		
 	}
 
 

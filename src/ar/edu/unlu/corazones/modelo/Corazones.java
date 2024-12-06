@@ -157,9 +157,9 @@ public class Corazones implements Observable {
 					if (jugada.tirarDosDeTrebol(cartaAJugar, turno) && (cartaAJugar != null)) {
 						
 						jugadores[turno].tirarCarta(jugadores[turno].buscarCarta(cartaAJugar));
+						notificar(EventosCorazones.CARTA_TIRADA_VALIDA);
 						turno = (turno + 1) % cantJugadores;
 						dosDeTrebolTirado = true;
-						notificar(EventosCorazones.CARTA_TIRADA_VALIDA);
 						
 					} else {
 						
@@ -183,9 +183,9 @@ public class Corazones implements Observable {
 			if (jugada.tirarCartaEnMesa(turno, cartaAJugar, this.corazonesRotos) && (cartaAJugar != null)) {
 				jugadores[turno].tirarCarta(jugadores[turno].buscarCarta(cartaAJugar));
 				tiroCorazones();
+				notificar(EventosCorazones.CARTA_TIRADA_VALIDA);
 				turno = (turno + 1) % cantJugadores;
 				cartaTiradaValida = true;
-				notificar(EventosCorazones.CARTA_TIRADA_VALIDA);
 				
 			} else {
 				
